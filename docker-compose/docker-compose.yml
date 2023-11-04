@@ -1,0 +1,23 @@
+
+services:
+  db-gateway:
+    container_name: wg-portal_db-gateway
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: wg-portal-db
+    ports:
+      - "15433:5432"
+    expose:
+      - "15433"
+#
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    container_name: pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: saiedtbi@gamil.com
+#      PGADMIN_DEFAULT_PASSWORD: 123
+#    ports:
+#      - "5050:80"

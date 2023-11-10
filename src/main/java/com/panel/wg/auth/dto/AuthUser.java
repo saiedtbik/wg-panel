@@ -1,6 +1,6 @@
 package com.panel.wg.auth.dto;
 
-import com.panel.wg.usermanagement.domain.entities.Role;
+import com.panel.wg.user.domain.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Data

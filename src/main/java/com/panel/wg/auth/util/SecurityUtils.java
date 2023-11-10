@@ -1,6 +1,6 @@
 package com.panel.wg.auth.util;
 
-import com.panel.wg.usermanagement.domain.entities.Role;
+import com.panel.wg.user.domain.entities.Role;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Objects;

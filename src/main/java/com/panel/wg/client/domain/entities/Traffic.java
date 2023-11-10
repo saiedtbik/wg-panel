@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -31,8 +32,19 @@ public class Traffic {
 
     Long createdBy;
 
-    public void active(){
+    public void active() {
         status = TrafficStatus.ACTIVE;
     }
 
+    public boolean hasCapacity() {
+        return transferRx + transferTx < capacity;
+    }
+
+    public boolean isExpired() {
+        return expirationDate.isBefore(LocalDate.now());
+    }
+
+    public void setStatus(TrafficStatus trafficStatus) {
+        this.status = trafficStatus;
+    }
 }

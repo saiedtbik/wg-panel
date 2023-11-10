@@ -7,6 +7,7 @@ import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import com.panel.wg.client.externalservice.WgProxyService;
 import com.panel.wg.client.externalservice.model.ClientModel;
+import com.panel.wg.client.externalservice.model.CreateClientModel;
 import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
@@ -17,7 +18,7 @@ public class CreateClientHandler implements Function<CreateClientCommand, Create
 
     @Override
     public CreateClientDto apply(CreateClientCommand createClientCommand) {
-        ClientModel clientModel = wgProxyService.createClient(createClientCommand);
+        ClientModel clientModel = wgProxyService.createClient(new CreateClientModel(createClientCommand.clientName()));
         Client newClient = Client.builder()
                 .clientId(clientModel.clientId())
                 .clientName(clientModel.clientName())
@@ -26,7 +27,6 @@ public class CreateClientHandler implements Function<CreateClientCommand, Create
                 .latestHandshakeAt(clientModel.latestHandshakeAt())
                 .updatedAt(clientModel.updatedAt())
                 .createdAt(clientModel.createdAt())
-
                 .status(ClientStatus.ACTIVE)
                 .build();
         clientRepository.add(newClient);

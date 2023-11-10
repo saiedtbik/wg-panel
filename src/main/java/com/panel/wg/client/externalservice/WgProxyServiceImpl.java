@@ -1,57 +1,83 @@
 package com.panel.wg.client.externalservice;
 
-import com.panel.wg.client.applicationservice.commands.CreateClientCommand;
 import com.panel.wg.client.externalservice.model.ClientModel;
+import com.panel.wg.client.externalservice.model.CreateClientModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class WgProxyServiceImpl implements WgProxyService {
 
     private final RestTemplate restTemplate;
-    private static final String GET_CLIENT_PATH = "/api/wireguard/client";
-    private static final String CREATE_CLIENT_PATH = "/api/wireguard/client";
-    private static final String ENABLE_CLIENT_PATH = "/api/wireguard/client/:clientId/enable";
-    private static final String DISABLE_CLIENT_PATH = "/api/wireguard/client/:clientId/disable";
+    private static final String CLIENT_PATH = "/api/wireguard/client";
 
     @Value("${app.wg.ip}")
-    private  String host;
+    private String host;
 
     @Value("${appl.wg.port}")
-    private  String port;
+    private String port;
 
     @Override
-    public ClientModel createClient(CreateClientCommand command) {
-        return null;
+    public ClientModel createClient(CreateClientModel createClientModel) {
+        String uri = generateURI(host, port, CLIENT_PATH);
+        HttpEntity<CreateClientModel> httpEntity = new HttpEntity<>(createClientModel);
+        ResponseEntity<ClientModel> clients = restTemplate.postForEntity(uri, httpEntity, ClientModel.class);
+        return clients.getBody();
     }
 
     @Override
-    public ClientModel getClient(String clientId) {
-        String uri = generateURI(host, port, GET_CLIENT_PATH);
-//        ResponseEntity<List<ClientModel>> response = restTemplate.postForEntity(uri, authInput, ClientModel.class);
-        return null;
+    public Optional<ClientModel> getClient(String clientId) {
+        return Arrays.stream(getAllClients())
+                .filter(c -> c.clientId().equals(clientId))
+                .findFirst();
     }
+
+    public ClientModel[] getAllClients() {
+        String uri = generateURI(host, port, CLIENT_PATH);
+        ResponseEntity<ClientModel[]> clients = restTemplate.getForEntity(uri, ClientModel[].class);
+        return clients.getBody();
+    }
+
 
     @Override
     public void enableClient(String clientId) {
+        StringBuilder path = new StringBuilder();
+        path.append(CLIENT_PATH);
+        path.append(clientId);
+        path.append("/enable");
 
+        String uri = generateURI(host, port, path.toString());
+        restTemplate.postForEntity(uri, null, Object.class);
     }
 
     @Override
     public void disableClient(String clientId) {
+        StringBuilder path = new StringBuilder();
+        path.append(CLIENT_PATH);
+        path.append(clientId);
+        path.append("/disable");
 
+        String uri = generateURI(host, port, path.toString());
+        restTemplate.postForEntity(uri, null, Object.class);
     }
 
+    @Override
+    public List<ClientModel> getAllActiveClients() {
+        return  Arrays.stream(getAllClients())
+                .filter(c -> c.enabled())
+                .toList();
+    }
 
-
-//
+    //
 //    @Override
 //    public InitiateMandateResponseModel initiateOneClickPaymentMandate(InitiateOneClickPaymentModel model) {
 //        HttpHeaders header = generateBearerJWTAuthHeader();

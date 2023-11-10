@@ -5,6 +5,7 @@ import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import com.panel.wg.client.domain.valueObjects.TrafficStatus;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
 import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -32,7 +33,6 @@ public class Client {
         status = ClientStatus.DISABLED;
     }
 
-
     public void enableClient() {
         status = ClientStatus.ACTIVE;
     }
@@ -41,10 +41,18 @@ public class Client {
         trafficList.add(traffic);
     }
 
-    public void changeCurrentTraffic() {
-        setExpiredOutDatedTraffic();
+    public void changeTrafficIfNeeded() {
+        if (!currentTraffic.hasCapacity()) {
+            changeCurrentTrafficFor(TrafficStatus.NO_CAPACITY);
+        } else if (currentTraffic.isExpired()) {
+            changeCurrentTrafficFor(TrafficStatus.EXPIRED);
+        }
+    }
+
+    private void  changeCurrentTrafficFor(TrafficStatus trafficStatus) {
+        currentTraffic.setStatus(trafficStatus);
         Traffic traffic = trafficList.stream()
-                .filter(t -> t.status.equals(TrafficStatus.CREATED))
+                .filter(t -> t.status.equals(TrafficStatus.CREATED) && t != currentTraffic)
                 .sorted(Comparator.comparing(t -> t.createAt))
                 .findFirst()
                 .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NO_TRAFFIC));
@@ -57,6 +65,7 @@ public class Client {
         currentTraffic.transferRx = updatedTransferRx;
 
     }
+
     public void setExpiredOutDatedTraffic() {
         trafficList.stream()
                 .filter(t -> t.status != TrafficStatus.EXPIRED && t.status != TrafficStatus.NO_CAPACITY)

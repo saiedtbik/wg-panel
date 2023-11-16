@@ -1,7 +1,7 @@
 
 services:
-  db-gateway:
-    container_name: wg-portal_db-gateway
+  wg-portal-db:
+    container_name: wg-portal-db
     image: postgres:15
     restart: always
     environment:

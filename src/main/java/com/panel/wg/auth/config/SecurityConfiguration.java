@@ -49,7 +49,10 @@ public class SecurityConfiguration {
 
                             /*--------------------- user ----------------------*/
                             .requestMatchers(POST, "/api/v1/user").hasAnyAuthority(CREATE_USER.name())
-                            .requestMatchers(GET, "/api/v1/user").hasAnyAuthority(QUERY_USERS.name())
+                            .requestMatchers(GET, "/api/v1/user").hasAnyAuthority(QUERY_USER.name())
+                            .requestMatchers(GET, "/api/v1/user/all").hasAnyAuthority(QUERY_ALL_USER.name())
+                            .requestMatchers(POST, "/api/v1/user/*/disable-client").hasAnyAuthority(DISABLE_CLIENT.name())
+                            .requestMatchers(POST, "/api/v1/user/*/enable-client").hasAnyAuthority(ENABLE_CLIENT.name())
 
 
                             /*------------------- creditor ----------------------------*/

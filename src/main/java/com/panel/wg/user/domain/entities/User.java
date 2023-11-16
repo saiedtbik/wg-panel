@@ -19,6 +19,10 @@ public class User {
     private LocalDateTime createOn;
     private boolean enabled;
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     public Set<Authority> getAuthorities() {
         return role.getAuthorities();
     }

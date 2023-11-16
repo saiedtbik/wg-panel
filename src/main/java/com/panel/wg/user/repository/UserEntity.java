@@ -1,10 +1,8 @@
 package com.panel.wg.user.repository;
 
+import com.panel.wg.client.dataaccess.entities.ClientEntity;
 import com.panel.wg.user.domain.entities.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -19,7 +17,9 @@ public class UserEntity {
     private String apiKey;
     private String secretKey;
     private String fullName;
+    @Enumerated(EnumType.STRING)
     private Role role;
     private LocalDateTime createOn;
     private boolean enabled;
+
 }

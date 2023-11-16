@@ -2,11 +2,16 @@ package com.panel.wg.client.applicationservice.mapper;
 
 import com.panel.wg.client.dataaccess.entities.TrafficEntity;
 import com.panel.wg.client.domain.entities.Traffic;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class TrafficMapper {
+
     static Traffic toTraffic(TrafficEntity entity) {
+        if(entity == null) {
+            return null;
+        }
         return Traffic.builder()
                 .id(entity.getId())
                 .client(ClientDataMapper.toClient(entity.getClient()))
@@ -20,6 +25,9 @@ public class TrafficMapper {
     }
 
     static TrafficEntity toEntity(Traffic traffic) {
+        if(traffic == null) {
+            return null;
+        }
         TrafficEntity trafficEntity = new TrafficEntity();
         trafficEntity.setId(trafficEntity.getId());
         trafficEntity.setClient(ClientDataMapper.toEntity(traffic.getClient()));

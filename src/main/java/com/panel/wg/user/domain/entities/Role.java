@@ -12,7 +12,10 @@ public enum Role {
                     (
                             CREATE_USER,
                             DISABLE_USER,
-                            QUERY_USERS
+                            QUERY_USER,
+                            QUERY_ALL_USER,
+                            DISABLE_CLIENT,
+                            ENABLE_CLIENT
 
                     )),
     CLIENT_USER(

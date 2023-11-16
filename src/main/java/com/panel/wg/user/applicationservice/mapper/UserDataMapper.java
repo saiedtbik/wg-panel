@@ -9,9 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
 public class UserDataMapper {
-    public User toUser(UserEntity entity) {
+    public static User toUser(UserEntity entity) {
         if (Objects.isNull(entity)) {
             return null;
         }
@@ -27,7 +26,7 @@ public class UserDataMapper {
     }
 
 
-    public UserEntity toUserEntity(User user) {
+    public static UserEntity toUserEntity(User user) {
         if (Objects.isNull(user)) {
             return null;
         }
@@ -50,7 +49,6 @@ public class UserDataMapper {
         return UserDto.builder()
                 .fullName(Objects.isNull(user.getFullName()) ? StringUtility.EMPTY : user.getFullName())
                 .username(user.getApiKey())
-                .role(user.getRole())
                 .build();
     }
 }

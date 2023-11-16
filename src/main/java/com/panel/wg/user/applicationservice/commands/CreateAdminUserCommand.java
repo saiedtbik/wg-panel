@@ -5,10 +5,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record CreateCreditorUserCommand(
+public record CreateAdminUserCommand(
         @NotNull()
         @NotBlank()
-        String fullName
-) {
+        String apiKey,
+        @NotNull()
+        @NotBlank()
+        String secretKey,
+        @NotNull()
+        @NotBlank()
+        String fullName) {
 
 }

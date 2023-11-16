@@ -22,8 +22,8 @@ public class UpdateActiveClientsTransferTrafficHandler {
         Map<String, Client> clients = clientRepository.findAllActiveClients();
 
         for (ClientModel clientModel : clientModels) {
-            Client client = clients.get(clientModel.clientId());
-            client.updateCurrentTrafficTransfer(clientModel.transferRx(), clientModel.transferTx());
+            Client client = clients.get(clientModel.getId());
+            client.updateCurrentTrafficTransfer(clientModel.getTransferRx(), clientModel.getTransferTx());
             clientRepository.add(client);
         }
     }

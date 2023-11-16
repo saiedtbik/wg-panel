@@ -1,6 +1,7 @@
 package com.panel.wg.user.bootstrap;
 
 import com.panel.wg.user.applicationservice.UserApplicationService;
+import com.panel.wg.user.applicationservice.commands.CreateAdminUserCommand;
 import com.panel.wg.user.applicationservice.commands.CreateUserCommand;
 import com.panel.wg.user.domain.entities.Role;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,12 @@ public class UserInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (!userApplicationService.userExistByApiKey("admin")) {
-            CreateUserCommand command = CreateUserCommand.builder()
+            CreateAdminUserCommand command = CreateAdminUserCommand.builder()
                     .apiKey("admin")
                     .secretKey(jibitPanelPass)
                     .fullName("Admin")
-                    .role(Role.ADMIN)
                     .build();
-            userApplicationService.createUser(command);
+            userApplicationService.createAdminUser(command);
         }
     }
 }

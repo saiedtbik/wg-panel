@@ -2,8 +2,14 @@ package com.panel.wg.user.applicationservice;
 
 import com.panel.wg.client.applicationservice.commands.CreateClientCommand;
 import com.panel.wg.client.applicationservice.commnadHandlers.CreateClientHandler;
+import com.panel.wg.client.applicationservice.data.ClientRepository;
+import com.panel.wg.client.applicationservice.dtoes.CreateClientDto;
+import com.panel.wg.client.domain.entities.Client;
+import com.panel.wg.client.domain.exceptions.ClientError;
+import com.panel.wg.client.domain.valueObjects.ClientStatus;
+import com.panel.wg.client.externalservice.WgProxyService;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
-import com.panel.wg.user.applicationservice.commands.CreateCreditorUserCommand;
+import com.panel.wg.user.applicationservice.commands.CreateAdminUserCommand;
 import com.panel.wg.user.applicationservice.commands.CreateUserCommand;
 import com.panel.wg.user.applicationservice.commands.DisableUserCommand;
 import com.panel.wg.user.applicationservice.mapper.UserDataMapper;
@@ -13,54 +19,58 @@ import com.panel.wg.user.domain.entities.User;
 import com.panel.wg.user.domain.exceptions.UserError;
 import com.panel.wg.user.repository.UserEntity;
 import com.panel.wg.user.repository.UserRepository;
-import com.panel.wg.user.utils.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class UserApplicationServiceImpl implements UserApplicationService {
     private final UserRepository userRepository;
-    private final UserDataMapper userDataMapper;
     private final PasswordEncoder passwordEncoder;
-    private final CreateClientHandler clientHandler;
+    private final CreateClientHandler createClientHandler;
+    private final ClientRepository clientRepository;
+    private final WgProxyService wgProxyService;
+
 
     @Transactional
     public User findUserByUserName(String username) {
         return userRepository.findByApiKey(username)
-                .map((userEntity -> userDataMapper.toUser(userEntity)))
+                .map((userEntity -> UserDataMapper.toUser(userEntity)))
                 .orElseThrow(() -> new BusinessRuleViolationException(UserError.USER_NOT_FOUND));
     }
 
-    public User createUser(CreateUserCommand command) {
-        if (userExistByApiKey(command.apiKey())) {
+    @Transactional
+    public UserDto createUser(CreateUserCommand command) {
+        if (userExistByApiKey(command.username())) {
             throw new BusinessRuleViolationException(UserError.USER_ALREADY_EXIST);
         }
         User user = User.builder()
-                .apiKey(command.apiKey())
-                .secretKey(passwordEncoder.encode(command.secretKey()))
+                .apiKey(command.username())
+                .secretKey(passwordEncoder.encode(command.password()))
                 .fullName(command.fullName())
-                .role(command.role())
+                .role(Role.CLIENT_USER)
+                .createOn(LocalDateTime.now())
                 .enabled(true)
                 .build();
-        UserEntity userEntity = userRepository.save(userDataMapper.toUserEntity(user));
+        UserEntity userEntity = userRepository.save(UserDataMapper.toUserEntity(user));
 
-        clientHandler.apply(CreateClientCommand.builder()
+        CreateClientDto clientDto = createClientHandler.apply(CreateClientCommand.builder()
                 .clientName(user.getApiKey())
+                .userId(userEntity.getId())
+                .clientStatus(ClientStatus.DISABLED)
                 .build());
 
 
-        return User.builder()
-                .id(userEntity.getId())
-                .apiKey(userEntity.getApiKey())
-                .secretKey(user.getSecretKey())
-                .role(Role.valueOf(user.getRole().name()))
-                .enabled(userEntity.isEnabled())
+        return UserDto.builder()
                 .fullName(user.getFullName())
+                .username(userEntity.getApiKey())
+                .enabled(userEntity.isEnabled())
+                .clientId(clientDto.clientId())
+                .clientStatus(clientDto.status())
                 .build();
     }
 
@@ -68,9 +78,9 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         UserEntity userEntity = userRepository.findByApiKey(command.userName())
                 .orElseThrow(() -> new BusinessRuleViolationException(UserError.USER_NOT_FOUND));
 
-        User user = userDataMapper.toUser(userEntity);
+        User user = UserDataMapper.toUser(userEntity);
         user.setEnabled(false);
-        userRepository.save(userDataMapper.toUserEntity(user));
+        userRepository.save(UserDataMapper.toUserEntity(user));
     }
 
     @Override
@@ -79,24 +89,26 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public Optional<UserDto> createCreditorUser(CreateCreditorUserCommand command) {
-        String apiKey = Principal.generateRandomAPIKey();
-        String secretKey = Principal.generateRandomSecretKey();
-
-        CreateUserCommand createUserCommand = CreateUserCommand.builder()
+    public Optional<UserDto> createAdminUser(CreateAdminUserCommand command) {
+        if (userExistByApiKey(command.apiKey())) {
+            throw new BusinessRuleViolationException(UserError.USER_ALREADY_EXIST);
+        }
+        User user = User.builder()
+                .apiKey(command.apiKey())
+                .secretKey(passwordEncoder.encode(command.secretKey()))
                 .fullName(command.fullName())
-                .apiKey(apiKey)
-                .secretKey(secretKey)
-                .role(Role.CLIENT_USER)
+                .createOn(LocalDateTime.now())
+                .role(Role.ADMIN)
+                .enabled(true)
                 .build();
-        createUser(createUserCommand);
+        userRepository.save(UserDataMapper.toUserEntity(user));
 
         UserDto userDto = UserDto.builder()
-                .username(apiKey)
-                .fullName(createUserCommand.fullName())
-                .role(createUserCommand.role())
+                .username(user.getApiKey())
+                .fullName(user.getFullName())
                 .build();
 
         return Optional.ofNullable(userDto);
     }
+
 }

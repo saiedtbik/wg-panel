@@ -9,13 +9,11 @@ import lombok.Builder;
 public record CreateUserCommand(
         @NotNull()
         @NotBlank()
-        String apiKey,
-        @NotNull()
-        @NotBlank()
-        String secretKey,
-        @NotNull()
-        @NotBlank()
         String fullName,
         @NotNull()
-        Role role) {
+        @NotBlank()
+        String username,
+        @NotNull()
+        @NotBlank()
+        String password) {
 }

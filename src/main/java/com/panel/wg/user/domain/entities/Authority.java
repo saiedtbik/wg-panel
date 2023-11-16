@@ -9,8 +9,13 @@ public enum Authority {
 
     /*---------------------------------- User Authorities --------------------------------------------------- */
     CREATE_USER("createUser"),
-    QUERY_USERS("queryUsers"),
+    QUERY_USER("queryUser"),
     DISABLE_USER("disableUser"),
+    QUERY_ALL_USER("queryAllUser"),
+
+    DISABLE_CLIENT("disableClient"),
+
+    ENABLE_CLIENT("enableClient"),
 
     ;
     @Getter

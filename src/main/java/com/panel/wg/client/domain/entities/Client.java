@@ -4,8 +4,8 @@ import com.panel.wg.client.domain.exceptions.ClientError;
 import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import com.panel.wg.client.domain.valueObjects.TrafficStatus;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
+import com.panel.wg.user.domain.entities.User;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -28,6 +28,7 @@ public class Client {
     ClientStatus status;
     List<Traffic> trafficList;
     Traffic currentTraffic;
+    User user;
 
     public void disableClient() {
         status = ClientStatus.DISABLED;

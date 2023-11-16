@@ -8,26 +8,32 @@ import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import com.panel.wg.client.externalservice.WgProxyService;
 import com.panel.wg.client.externalservice.model.ClientModel;
 import com.panel.wg.client.externalservice.model.CreateClientModel;
+import com.panel.wg.user.applicationservice.mapper.UserDataMapper;
+import com.panel.wg.user.domain.entities.User;
+import com.panel.wg.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
+@RequiredArgsConstructor
 @Service
 public class CreateClientHandler implements Function<CreateClientCommand, CreateClientDto> {
-    ClientRepository clientRepository;
-    WgProxyService wgProxyService;
+    private final ClientRepository clientRepository;
+    private final WgProxyService wgProxyService;
 
     @Override
     public CreateClientDto apply(CreateClientCommand createClientCommand) {
         ClientModel clientModel = wgProxyService.createClient(new CreateClientModel(createClientCommand.clientName()));
+
         Client newClient = Client.builder()
-                .clientId(clientModel.clientId())
-                .clientName(clientModel.clientName())
-                .publicKey(clientModel.publicKey())
-                .address(clientModel.address())
-                .latestHandshakeAt(clientModel.latestHandshakeAt())
-                .updatedAt(clientModel.updatedAt())
-                .createdAt(clientModel.createdAt())
-                .status(ClientStatus.ACTIVE)
+                .clientId(clientModel.getId())
+                .clientName(clientModel.getName())
+                .user(new User(createClientCommand.userId()))
+                .publicKey(clientModel.getPublicKey())
+                .address(clientModel.getAddress())
+                .updatedAt(clientModel.getUpdatedAt())
+                .createdAt(clientModel.getCreatedAt())
+                .status(createClientCommand.clientStatus())
                 .build();
         clientRepository.add(newClient);
 

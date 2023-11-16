@@ -1,9 +1,11 @@
 package com.panel.wg.client.dataaccess.entities;
 
 import com.panel.wg.client.domain.valueObjects.ClientStatus;
+import com.panel.wg.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,18 +15,22 @@ import java.util.List;
 public class ClientEntity {
     @Id
     String clientId;
-
     String clientName;
-    boolean enabled;
     String address;
     String publicKey;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     LocalDateTime latestHandshakeAt;
+
+    @Enumerated(EnumType.STRING)
     ClientStatus status;
+
     @OneToMany
-    List<TrafficEntity> trafficList;
+    List<TrafficEntity> trafficList = new ArrayList<>();
 
     @OneToOne
     TrafficEntity currentTraffic;
+
+    @OneToOne
+    UserEntity userEntity;
 }

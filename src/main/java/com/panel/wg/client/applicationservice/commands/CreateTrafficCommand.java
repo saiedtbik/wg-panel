@@ -1,12 +1,14 @@
-package com.panel.wg.client.externalservice.model;
+package com.panel.wg.client.applicationservice.commands;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record CreateClientModel(
+public record CreateTrafficCommand(
+        @NotNull
+        Long capacity,
         @NotNull
         @NotBlank
-        String name) {
+        String expirationDate) {
 }

@@ -2,17 +2,18 @@ package com.panel.wg.client.dataaccess.adapter;
 
 import com.panel.wg.client.applicationservice.data.ClientRepository;
 import com.panel.wg.client.applicationservice.mapper.ClientDataMapper;
+import com.panel.wg.client.dataaccess.entities.ClientEntity;
 import com.panel.wg.client.dataaccess.repositories.ClientJpaRepository;
 import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.ast.tree.expression.Over;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 @Service
@@ -44,9 +45,18 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public Map<String,Client> findAllActiveClients() {
+    public Map<String, Client> findAllActiveClients() {
         return findAll().stream()
                 .filter(c -> c.getStatus().equals(ClientStatus.ACTIVE))
                 .collect(Collectors.toMap(c -> c.getClientId(), c -> c, (oldVal, newVal) -> newVal));
+    }
+
+    @Override
+    public Optional<Client> findClientByUsername(String username) {
+        Optional<ClientEntity> clientUserInfo = clientJpaRepository.findClientUserInfo(username);
+        if (!clientUserInfo.isPresent()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(ClientDataMapper.toClient(clientUserInfo.get()));
     }
 }

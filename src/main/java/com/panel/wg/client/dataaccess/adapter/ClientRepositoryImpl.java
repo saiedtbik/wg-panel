@@ -4,6 +4,7 @@ import com.panel.wg.client.applicationservice.data.ClientRepository;
 import com.panel.wg.client.applicationservice.mapper.ClientDataMapper;
 import com.panel.wg.client.dataaccess.entities.ClientEntity;
 import com.panel.wg.client.dataaccess.repositories.ClientJpaRepository;
+import com.panel.wg.client.dataaccess.repositories.TrafficJpaRepository;
 import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,11 @@ import java.util.stream.Collectors;
 public class ClientRepositoryImpl implements ClientRepository {
 
     private final ClientJpaRepository clientJpaRepository;
+    private final TrafficJpaRepository trafficJpaRepository;
 
     @Override
     public Optional<Client> find(String clientId) {
+
         return clientJpaRepository.findById(clientId)
                 .map(entity -> ClientDataMapper.toClient(entity));
     }

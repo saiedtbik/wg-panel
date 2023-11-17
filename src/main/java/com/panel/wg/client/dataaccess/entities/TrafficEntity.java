@@ -1,11 +1,10 @@
 package com.panel.wg.client.dataaccess.entities;
 
 import com.panel.wg.client.domain.valueObjects.TrafficStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Generated;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,10 +13,8 @@ import java.time.LocalDateTime;
 @Table(name = "t_traffic")
 public class TrafficEntity {
     @Id
+    @GeneratedValue
     Long id;
-
-    @ManyToOne
-    ClientEntity client;
 
     Long capacity;
 
@@ -27,9 +24,11 @@ public class TrafficEntity {
 
     Long transferTx;
 
+//    @Enumerated(EnumType.STRING)
     TrafficStatus status;
 
     LocalDateTime createAt;
 
     Long createdBy;
+
 }

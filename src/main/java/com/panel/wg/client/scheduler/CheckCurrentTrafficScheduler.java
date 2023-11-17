@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class CheckCurrentTrafficScheduler {
     private final CheckTrafficHandler checkTrafficHandler;
 
-    @Scheduled(cron = "0 * 19 * * ?")
+    @Scheduled(fixedRate = 300000)
     public void scheduleTask() {
         checkTrafficHandler.handle();
     }

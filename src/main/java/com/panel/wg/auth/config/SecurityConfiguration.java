@@ -47,21 +47,17 @@ public class SecurityConfiguration {
                             )
                             .permitAll()
 
-                            /*--------------------- user ----------------------*/
                             .requestMatchers(POST, "/api/v1/user").hasAnyAuthority(CREATE_USER.name())
                             .requestMatchers(GET, "/api/v1/user").hasAnyAuthority(QUERY_USER.name())
                             .requestMatchers(GET, "/api/v1/user/all").hasAnyAuthority(QUERY_ALL_USER.name())
                             .requestMatchers(POST, "/api/v1/user/*/disable-client").hasAnyAuthority(DISABLE_CLIENT.name())
                             .requestMatchers(POST, "/api/v1/user/*/enable-client").hasAnyAuthority(ENABLE_CLIENT.name())
-
-
-                            /*------------------- creditor ----------------------------*/
-//                            .requestMatchers(POST, "/api/v1/creditor/add-sheba-number").hasAnyAuthority(ADD_CREDITOR_SHEBA.name())
-//                            .requestMatchers(POST, "/api/v1/creditor/change-state").hasAnyAuthority(CHANGE_CREDITOR_STATE.name())
-//                            .requestMatchers(POST, "/api/v1/creditor/change-target-account-number").hasAnyAuthority(CHANGE_CREDITOR_ACCOUNT_NUMBER.name())
-//                            .requestMatchers(POST, "/api/v1/creditor/register").hasAnyAuthority(CREDITOR_REGISTER.name())
-//                            .requestMatchers(POST, "/api/v1/creditor/remove-sheba-number").hasAnyAuthority(REMOVE_CREDITOR_SHEBA.name())
-//                            .requestMatchers(GET, "/api/v1/creditor/detail").hasAnyAuthority(VIEW_CREDITOR_DETAILS.name())
+                            .requestMatchers(POST, "/api/v1/clients/enable").hasAnyAuthority(ENABLE_ALL_CLIENTS.name())
+                            .requestMatchers(POST, "/api/v1/user/add-traffic").hasAnyAuthority(ADD_TRAFFIC.name())
+                            .requestMatchers(GET, "/api/v1/user/*/traffics").hasAnyAuthority(VIEW_TRAFFIC.name())
+                            .requestMatchers(POST, "/api/v1/clients/rest-wg-transfer").hasAnyAuthority(REST_ALL_CLIENTS_WG_TRAFFIC.name())
+                            .requestMatchers(POST, "/api/v1/user/*/client/rest-wg-transfer").hasAnyAuthority(RESET_CLIENT_WG_TRAFFIC.name())
+                            .requestMatchers(POST, "/api/v1/user/create-from-wg-clients").hasAnyAuthority(GENERATE_USERS_FROM_WG_CLIENTS.name());
 
                     ;
 
@@ -71,7 +67,6 @@ public class SecurityConfiguration {
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 
 
 }

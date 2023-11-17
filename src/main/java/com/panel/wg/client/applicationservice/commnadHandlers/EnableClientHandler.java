@@ -27,4 +27,5 @@ public class EnableClientHandler implements Consumer<EnableClientCommand> {
 
         clientRepository.add(client);
     }
+
 }

@@ -3,8 +3,9 @@ package com.panel.wg.client.applicationservice.mapper;
 import com.panel.wg.client.dataaccess.entities.ClientEntity;
 import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.user.applicationservice.mapper.UserDataMapper;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class ClientDataMapper {
@@ -26,7 +27,7 @@ public class ClientDataMapper {
                 .trafficList(entity.getTrafficList() == null ? null : entity.getTrafficList()
                         .stream()
                         .map(trafficEntity -> TrafficMapper.toTraffic(trafficEntity))
-                        .toList())
+                        .collect(Collectors.toList()))
                 .currentTraffic(TrafficMapper.toTraffic(entity.getCurrentTraffic()))
                 .build();
     }
@@ -38,7 +39,7 @@ public class ClientDataMapper {
         entity.setUserEntity(UserDataMapper.toUserEntity(client.getUser()));
         entity.setAddress(client.getAddress());
         entity.setStatus(client.getStatus());
-        entity.setTrafficList(client.getTrafficList() == null ? Collections.EMPTY_LIST : client.getTrafficList()
+        entity.setTrafficList(client.getTrafficList() == null ? new ArrayList<>() : client.getTrafficList()
                 .stream()
                 .map(traffic -> TrafficMapper.toEntity(traffic))
                 .toList());

@@ -8,6 +8,7 @@ import com.panel.wg.user.domain.entities.User;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class Client {
     LocalDateTime updatedAt;
     LocalDateTime latestHandshakeAt;
     ClientStatus status;
-    List<Traffic> trafficList;
+    List<Traffic> trafficList = new ArrayList<>();
     Traffic currentTraffic;
     User user;
 
@@ -54,6 +55,16 @@ public class Client {
         currentTraffic.setStatus(trafficStatus);
         Traffic traffic = trafficList.stream()
                 .filter(t -> t.status.equals(TrafficStatus.CREATED) && t != currentTraffic)
+                .sorted(Comparator.comparing(t -> t.createAt))
+                .findFirst()
+                .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NO_TRAFFIC));
+        traffic.status = TrafficStatus.ACTIVE;
+        this.currentTraffic = traffic;
+    }
+
+    public void setCurrentTraffic() {
+        Traffic traffic = trafficList.stream()
+                .filter(t -> t.status.equals(TrafficStatus.CREATED))
                 .sorted(Comparator.comparing(t -> t.createAt))
                 .findFirst()
                 .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NO_TRAFFIC));

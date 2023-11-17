@@ -1,43 +1,61 @@
 package com.panel.wg.client.applicationservice.mapper;
 
+import com.github.mfathi91.time.PersianDate;
 import com.panel.wg.client.dataaccess.entities.TrafficEntity;
+import com.panel.wg.client.domain.dtoes.TrafficDto;
 import com.panel.wg.client.domain.entities.Traffic;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import com.panel.wg.common.domain.tools.validators.Validator;
 
 
 public class TrafficMapper {
 
-    static Traffic toTraffic(TrafficEntity entity) {
-        if(entity == null) {
+    public static Traffic toTraffic(TrafficEntity entity) {
+        if (entity == null) {
             return null;
         }
         return Traffic.builder()
                 .id(entity.getId())
-                .client(ClientDataMapper.toClient(entity.getClient()))
                 .capacity(entity.getCapacity())
                 .transferRx(entity.getTransferRx())
                 .transferTx(entity.getTransferTx())
                 .createdBy(entity.getCreatedBy())
                 .createAt(entity.getCreateAt())
                 .expirationDate(entity.getExpirationDate())
+                .status(entity.getStatus())
                 .build();
     }
 
-    static TrafficEntity toEntity(Traffic traffic) {
-        if(traffic == null) {
+    public static TrafficEntity toEntity(Traffic traffic) {
+        if (traffic == null) {
             return null;
         }
         TrafficEntity trafficEntity = new TrafficEntity();
-        trafficEntity.setId(trafficEntity.getId());
-        trafficEntity.setClient(ClientDataMapper.toEntity(traffic.getClient()));
-        trafficEntity.setCapacity(trafficEntity.getCapacity());
-        trafficEntity.setTransferRx(trafficEntity.getTransferRx());
-        trafficEntity.setTransferTx(trafficEntity.getTransferTx());
-        trafficEntity.setCreatedBy(trafficEntity.getCreatedBy());
-        trafficEntity.setCreateAt(trafficEntity.getCreateAt());
-        trafficEntity.setExpirationDate(trafficEntity.getExpirationDate());
+        trafficEntity.setId(traffic.getId());
+        trafficEntity.setCapacity(traffic.getCapacity());
+        trafficEntity.setTransferRx(traffic.getTransferRx());
+        trafficEntity.setTransferTx(traffic.getTransferTx());
+        trafficEntity.setCreatedBy(traffic.getCreatedBy());
+        trafficEntity.setCreateAt(traffic.getCreateAt());
+        trafficEntity.setExpirationDate(traffic.getExpirationDate());
+        trafficEntity.setStatus(traffic.getStatus());
+
         return trafficEntity;
+    }
+
+    public static TrafficDto toDto(Traffic traffic) {
+        if (traffic == null) {
+            return null;
+        }
+
+        TrafficDto dto = TrafficDto.builder()
+                .capacity(traffic.getCapacity())
+                .expirationDate(PersianDate.fromGregorian(traffic.getExpirationDate()).format(Validator.DATE_TIME_FORMATTER))
+                .status(traffic.getStatus())
+                .createAt(traffic.getCreateAt())
+                .transferRx(traffic.getTransferRx())
+                .transferTx(traffic.getTransferTx())
+                .build();
+        return dto;
     }
 
 }

@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status) from ClientEntity c inner join c.userEntity u")
     List<UserDto> findAllClientUsersInfo();
+
+    @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status) from ClientEntity c inner join c.userEntity u where c.clientId=:clientId")
+    Optional<UserDto> existsByClientId(@Param("clientId") String clientId);
 }

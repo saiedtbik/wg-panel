@@ -7,6 +7,7 @@ import com.panel.wg.client.externalservice.WgProxyService;
 import com.panel.wg.client.externalservice.model.ClientModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,10 @@ public class UpdateActiveClientsTransferTrafficHandler {
 
         for (ClientModel clientModel : clientModels) {
             Client client = clients.get(clientModel.getId());
-            client.updateCurrentTrafficTransfer(clientModel.getTransferRx(), clientModel.getTransferTx());
-            clientRepository.add(client);
+            if (client != null) {
+                client.updateCurrentTrafficTransfer(clientModel.getTransferRx(), clientModel.getTransferTx());
+                clientRepository.add(client);
+            }
         }
     }
 

@@ -25,7 +25,8 @@ public class ClientEntity {
     @Enumerated(EnumType.STRING)
     ClientStatus status;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_Id")
     List<TrafficEntity> trafficList = new ArrayList<>();
 
     @OneToOne

@@ -18,4 +18,6 @@ public interface UserApplicationService {
 
     void disableUser(DisableUserCommand command);
 
+    void creatAllUserFromWgClients();
+
 }

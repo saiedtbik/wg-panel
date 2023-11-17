@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
  */
 public final class Validator {
     private static final BigInteger NINETY_SEVEN = new BigInteger("97");
-    public static final DateTimeFormatter BIRTH_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
     public static final DateTimeFormatter YEAR_MONTH_DAY_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyMMdd");
 
     /**
@@ -178,7 +178,7 @@ public final class Validator {
             return false;
 
         try {
-            return PersianDate.parse(birthDate, BIRTH_DATE_TIME_FORMATTER).isBefore(PersianDate.now());
+            return PersianDate.parse(birthDate, DATE_TIME_FORMATTER).isBefore(PersianDate.now());
         } catch (Exception ex) {
             return false;
         }

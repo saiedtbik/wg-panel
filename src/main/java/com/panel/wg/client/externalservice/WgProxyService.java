@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WgProxyService {
+
+    String auth();
     ClientModel createClient(CreateClientModel createClientModel);
     Optional<ClientModel> getClient(String clientId);
     ClientModel[] getAllClients();

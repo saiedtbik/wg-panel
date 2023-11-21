@@ -42,6 +42,10 @@ public class WgProxyServiceImpl implements WgProxyService {
         System.out.println("*************************************");
 
         ResponseEntity<String> result = restTemplate.postForEntity(uri, body, String.class);
+        System.out.println("*************************************");
+        System.out.println("result =" + result.getHeaders());
+        System.out.println("*************************************");
+
         return result.getHeaders().get("Set-Cookie").get(0);
     }
 

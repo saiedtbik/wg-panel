@@ -37,6 +37,10 @@ public class WgProxyServiceImpl implements WgProxyService {
         Map<String, String> body = new HashedMap();
         body.put("password", pass);
         String uri = generateURI(host, port, "/api/session");
+        System.out.println("*************************************");
+        System.out.println("uri =" + uri);
+        System.out.println("*************************************");
+
         ResponseEntity<String> result = restTemplate.postForEntity(uri, body, String.class);
         return result.getHeaders().get("Set-Cookie").get(0);
     }

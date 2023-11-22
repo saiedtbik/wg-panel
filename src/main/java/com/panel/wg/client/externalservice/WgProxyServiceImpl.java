@@ -1,17 +1,14 @@
 package com.panel.wg.client.externalservice;
 
+import com.panel.wg.client.externalservice.model.AuthModel;
 import com.panel.wg.client.externalservice.model.ClientModel;
 import com.panel.wg.client.externalservice.model.CreateClientModel;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -33,19 +30,13 @@ public class WgProxyServiceImpl implements WgProxyService {
     @Override
     public String auth() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        Map<String, String> body = new HashedMap();
-        body.put("password", pass);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        AuthModel authModel = new AuthModel(pass);
         String uri = generateURI(host, port, "/api/session");
-        System.out.println("*************************************");
-        System.out.println("uri =" + uri);
-        System.out.println("*************************************");
-
-        ResponseEntity<String> result = restTemplate.postForEntity(uri, body, String.class);
-        System.out.println("*************************************");
-        System.out.println("result =" + result.getHeaders());
-        System.out.println("*************************************");
-
+        HttpEntity<AuthModel> httpEntity = new HttpEntity<>(authModel, headers);
+        ResponseEntity<String> result = restTemplate.postForEntity(uri, httpEntity, String.class);
+        String redirectUri = result.getHeaders().get("Location").get(0);
+        result = restTemplate.postForEntity(redirectUri, httpEntity, String.class);
         return result.getHeaders().get("Set-Cookie").get(0);
     }
 
@@ -58,6 +49,8 @@ public class WgProxyServiceImpl implements WgProxyService {
         String uri = generateURI(host, port, CLIENT_PATH);
         HttpEntity<CreateClientModel> httpEntity = new HttpEntity<>(createClientModel, headers);
         ResponseEntity<ClientModel> clients = restTemplate.postForEntity(uri, httpEntity, ClientModel.class);
+        String redirectUri = clients.getHeaders().get("Location").get(0);
+         clients = restTemplate.postForEntity(redirectUri, httpEntity, ClientModel.class);
         ClientModel clientModel = clients.getBody();
         ClientModel[] allClients = getAllClients();
         String id = Arrays.stream(allClients)
@@ -84,9 +77,10 @@ public class WgProxyServiceImpl implements WgProxyService {
         headers.add("Cookie", sessionId);
 
         HttpEntity  httpEntity = new HttpEntity<>(headers);
-
         String uri = generateURI(host, port, CLIENT_PATH);
-        ResponseEntity<ClientModel[]> clients = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, ClientModel[].class);
+        ResponseEntity<String> redirectHeaders = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, String.class);
+        String redirectUri = redirectHeaders.getHeaders().get("Location").get(0);
+        ResponseEntity<ClientModel[]> clients = restTemplate.exchange(redirectUri, HttpMethod.GET, httpEntity, ClientModel[].class);
         return clients.getBody();
 
     }
@@ -108,7 +102,11 @@ public class WgProxyServiceImpl implements WgProxyService {
 
 
         String uri = generateURI(host, port, path.toString());
-        restTemplate.postForEntity(uri, httpEntity, Object.class);
+        ResponseEntity<String> redirectHeader = restTemplate.postForEntity(uri, httpEntity, String.class);
+        String redirectUri = redirectHeader.getHeaders().get("Location").get(0);
+         restTemplate.postForEntity(redirectUri, httpEntity, Object.class);
+
+
     }
 
     @Override
@@ -126,7 +124,9 @@ public class WgProxyServiceImpl implements WgProxyService {
         path.append("/disable");
 
         String uri = generateURI(host, port, path.toString());
-        restTemplate.postForEntity(uri, httpEntity, Object.class);
+        ResponseEntity<String> redirectHeaders = restTemplate.postForEntity(uri, httpEntity, String.class);
+        String redirectUri = redirectHeaders.getHeaders().get("Location").get(0);
+        restTemplate.postForEntity(redirectUri, httpEntity, Object.class);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class WgProxyServiceImpl implements WgProxyService {
 
 
     private String generateURI(String host, String port, String url) {
-
-        return "http://".concat(host).concat(":").concat(port).concat(url);
+        return "http://st.mrsduck.store".concat(url);
+//        return "http://".concat(host).concat(":").concat(port).concat(url);
     }
 }

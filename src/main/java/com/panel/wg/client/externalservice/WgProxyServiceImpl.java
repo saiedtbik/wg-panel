@@ -48,9 +48,9 @@ public class WgProxyServiceImpl implements WgProxyService {
 
         String uri = generateURI(host, port, CLIENT_PATH);
         HttpEntity<CreateClientModel> httpEntity = new HttpEntity<>(createClientModel, headers);
-        ResponseEntity<ClientModel> clients = restTemplate.postForEntity(uri, httpEntity, ClientModel.class);
-        String redirectUri = clients.getHeaders().get("Location").get(0);
-         clients = restTemplate.postForEntity(redirectUri, httpEntity, ClientModel.class);
+        ResponseEntity<String> redirectHeaders = restTemplate.postForEntity(uri, httpEntity, String.class);
+        String redirectUri = redirectHeaders.getHeaders().get("Location").get(0);
+         ResponseEntity<ClientModel>clients = restTemplate.postForEntity(redirectUri, httpEntity, ClientModel.class);
         ClientModel clientModel = clients.getBody();
         ClientModel[] allClients = getAllClients();
         String id = Arrays.stream(allClients)

@@ -24,6 +24,9 @@ public class CreateClientHandler implements Function<CreateClientCommand, Create
     @Override
     public CreateClientDto apply(CreateClientCommand createClientCommand) {
         ClientModel clientModel = wgProxyService.createClient(new CreateClientModel(createClientCommand.clientName()));
+        if(createClientCommand.clientStatus() == ClientStatus.DISABLED) {
+            wgProxyService.disableClient(clientModel.getId());
+        }
 
         Client newClient = Client.builder()
                 .clientId(clientModel.getId())

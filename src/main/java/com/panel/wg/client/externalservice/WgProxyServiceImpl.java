@@ -112,7 +112,7 @@ public class WgProxyServiceImpl implements WgProxyService {
     @Override
     public void disableClient(String clientId) {
 
-        String sessionId = auth();
+       String sessionId = auth();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cookie", sessionId);
         HttpEntity httpEntity = new HttpEntity<>(headers);

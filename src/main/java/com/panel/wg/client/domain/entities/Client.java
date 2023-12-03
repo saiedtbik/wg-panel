@@ -6,11 +6,13 @@ import com.panel.wg.client.domain.valueObjects.TrafficStatus;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
 import com.panel.wg.user.domain.entities.User;
 import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 
 @Getter
@@ -28,7 +30,6 @@ public class Client {
     LocalDateTime latestHandshakeAt;
     ClientStatus status;
     List<Traffic> trafficList = new ArrayList<>();
-    Traffic currentTraffic;
     User user;
 
     public void disableClient() {
@@ -43,39 +44,50 @@ public class Client {
         trafficList.add(traffic);
     }
 
-    public void changeTrafficIfNeeded() {
-        if (!currentTraffic.hasCapacity()) {
-            changeCurrentTrafficFor(TrafficStatus.NO_CAPACITY);
-        } else if (currentTraffic.isExpired()) {
-            changeCurrentTrafficFor(TrafficStatus.EXPIRED);
+    public boolean changeTrafficIfNeeded() {
+        boolean changed = false;
+        Optional<Traffic> currentTraffic = getCurrentTraffic();
+        if (currentTraffic.isPresent()) {
+            if (!currentTraffic.get().hasCapacity()) {
+                changeCurrentTrafficFor(TrafficStatus.NO_CAPACITY);
+                changed = true;
+            } else if (currentTraffic.get().isExpired()) {
+                changeCurrentTrafficFor(TrafficStatus.EXPIRED);
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    private void changeCurrentTrafficFor(TrafficStatus trafficStatus) {
+        Optional<Traffic> currentTraffic = getCurrentTraffic();
+        if(currentTraffic.isPresent()) {
+            currentTraffic.get().setStatus(trafficStatus);
+            Traffic traffic = trafficList.stream()
+                    .filter(t -> t.status.equals(TrafficStatus.CREATED) && t != currentTraffic.get())
+                    .sorted(Comparator.comparing(t -> t.createAt))
+                    .findFirst()
+                    .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NO_TRAFFIC));
+            traffic.status = TrafficStatus.ACTIVE;
         }
     }
 
-    private void  changeCurrentTrafficFor(TrafficStatus trafficStatus) {
-        currentTraffic.setStatus(trafficStatus);
-        Traffic traffic = trafficList.stream()
-                .filter(t -> t.status.equals(TrafficStatus.CREATED) && t != currentTraffic)
-                .sorted(Comparator.comparing(t -> t.createAt))
-                .findFirst()
-                .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NO_TRAFFIC));
-        traffic.status = TrafficStatus.ACTIVE;
-        this.currentTraffic = traffic;
-    }
-
-    public void setCurrentTraffic() {
+    public void setActiveTraffic() {
         Traffic traffic = trafficList.stream()
                 .filter(t -> t.status.equals(TrafficStatus.CREATED))
                 .sorted(Comparator.comparing(t -> t.createAt))
                 .findFirst()
                 .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NO_TRAFFIC));
         traffic.status = TrafficStatus.ACTIVE;
-        this.currentTraffic = traffic;
+
     }
 
     public void updateCurrentTrafficTransfer(Long updatedTransferRx, Long updatedTransferTx) {
-        currentTraffic.transferTx = updatedTransferTx;
-        currentTraffic.transferRx = updatedTransferRx;
-
+        Optional<Traffic> currentTraffic = getCurrentTraffic();
+        if (currentTraffic.isPresent()) {
+            currentTraffic.get().transferTx = updatedTransferTx;
+            currentTraffic.get().transferRx = updatedTransferRx;
+        }
     }
 
     public void setExpiredOutDatedTraffic() {
@@ -83,6 +95,12 @@ public class Client {
                 .filter(t -> t.status != TrafficStatus.EXPIRED && t.status != TrafficStatus.NO_CAPACITY)
                 .filter(t -> t.expirationDate.isBefore(LocalDate.now()))
                 .forEach(t -> t.status = TrafficStatus.EXPIRED);
+    }
+
+    public Optional<Traffic> getCurrentTraffic() {
+        return trafficList.stream()
+                .filter(t -> t.status == TrafficStatus.ACTIVE)
+                .findFirst();
     }
 
 }

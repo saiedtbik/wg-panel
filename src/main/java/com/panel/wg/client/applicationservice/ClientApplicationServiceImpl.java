@@ -15,9 +15,9 @@ import com.panel.wg.client.domain.dtoes.TrafficDto;
 import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.client.domain.entities.Traffic;
 import com.panel.wg.client.domain.exceptions.ClientError;
+import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import com.panel.wg.client.domain.valueObjects.TrafficStatus;
 import com.panel.wg.client.externalservice.WgProxyService;
-import com.panel.wg.client.externalservice.model.ClientModel;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
 import com.panel.wg.common.domain.tools.validators.Validator;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +64,11 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     @Transactional
     @Override
     public void enableAllClients() {
-        ClientModel[] allClients = wgProxyService.getAllClients();
-        for (ClientModel c : allClients) {
-            enableClientHandler.accept(new EnableClientCommand(c.getId()));
+        // ClientModel[] allClients = wgProxyService.getAllClients();
+        List<Client> clients = clientRepository.findAll();
+
+        for (Client c : clients) {
+            enableClientHandler.accept(new EnableClientCommand(c.getClientId()));
         }
     }
 
@@ -81,10 +83,11 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
 
     @Override
     public void resetAllClientsWgTransfer() {
-        ClientModel[] allClients = wgProxyService.getAllClients();
-        for (ClientModel c : allClients) {
-            if (c.isEnabled() == true)
-                resetClientWgTransferHandler.handle(c.getId());
+        //ClientModel[] allClients = wgProxyService.getAllClients();
+        List<Client> clients = clientRepository.findAll();
+        for (Client c : clients) {
+            if (c.getStatus() == ClientStatus.ACTIVE)
+                resetClientWgTransferHandler.handle(c.getClientId());
         }
     }
 

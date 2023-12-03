@@ -6,8 +6,10 @@ import com.panel.wg.client.externalservice.WgProxyService;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -18,18 +20,23 @@ public class CheckTrafficHandler {
     private final ResetClientWgTransferHandler resetClientWgTransferHandler;
 
     public void handle() {
-        List<Client> clientList = clientRepository.findAll();
-        for (Client c : clientList) {
+        Map<String, Client> allActiveClients = clientRepository.findAllActiveClients();
+        for (Client c : allActiveClients.values()) {
             try {
-                if (Objects.isNull(c.getCurrentTraffic())) {
-                    c.setCurrentTraffic();
+                if (!c.getCurrentTraffic().isPresent()) {
+                    c.setActiveTraffic();
+                    resetClientWgTransferHandler.handle(c.getClientId());
+                } else {
+                    boolean isChanged = c.changeTrafficIfNeeded();
+                     if(isChanged) {
+                         resetClientWgTransferHandler.handle(c.getClientId());
+                     }
                 }
-                c.changeTrafficIfNeeded();
-                resetClientWgTransferHandler.handle(c.getClientId());
 
             } catch (BusinessRuleViolationException e) {
                 wgProxyService.disableClient(c.getClientId());
                 c.disableClient();
+                clientRepository.add(c);
             }
             clientRepository.add(c);
         }

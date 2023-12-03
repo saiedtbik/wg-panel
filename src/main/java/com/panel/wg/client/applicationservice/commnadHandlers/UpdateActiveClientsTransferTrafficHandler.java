@@ -7,6 +7,7 @@ import com.panel.wg.client.externalservice.WgProxyService;
 import com.panel.wg.client.externalservice.model.ClientModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class UpdateActiveClientsTransferTrafficHandler {
     private final ClientRepository clientRepository;
     private final WgProxyService wgProxyService;
 
+    @Transactional
     public void handle() {
         List<ClientModel> clientModels = wgProxyService.getAllActiveClients();
         Map<String, Client> clients = clientRepository.findAllActiveClients();

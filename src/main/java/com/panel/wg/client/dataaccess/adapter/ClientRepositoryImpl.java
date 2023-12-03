@@ -9,6 +9,7 @@ import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.client.domain.valueObjects.ClientStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
+    @Transactional
     public void add(Client client) {
         clientJpaRepository.save(ClientDataMapper.toEntity(client));
     }
@@ -51,6 +53,12 @@ public class ClientRepositoryImpl implements ClientRepository {
     public Map<String, Client> findAllActiveClients() {
         return findAll().stream()
                 .filter(c -> c.getStatus().equals(ClientStatus.ACTIVE))
+                .collect(Collectors.toMap(c -> c.getClientId(), c -> c, (oldVal, newVal) -> newVal));
+    }
+
+    @Override
+    public Map<String, Client> findAllClients() {
+        return findAll().stream()
                 .collect(Collectors.toMap(c -> c.getClientId(), c -> c, (oldVal, newVal) -> newVal));
     }
 

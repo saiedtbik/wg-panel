@@ -28,7 +28,6 @@ public class ClientDataMapper {
                         .stream()
                         .map(trafficEntity -> TrafficMapper.toTraffic(trafficEntity))
                         .collect(Collectors.toList()))
-                .currentTraffic(TrafficMapper.toTraffic(entity.getCurrentTraffic()))
                 .build();
     }
 
@@ -43,7 +42,6 @@ public class ClientDataMapper {
                 .stream()
                 .map(traffic -> TrafficMapper.toEntity(traffic))
                 .toList());
-        entity.setCurrentTraffic(client.getCurrentTraffic() == null ? null : TrafficMapper.toEntity(client.getCurrentTraffic()));
         entity.setPublicKey(client.getPublicKey());
         entity.setLatestHandshakeAt(client.getLatestHandshakeAt());
         entity.setStatus(client.getStatus());

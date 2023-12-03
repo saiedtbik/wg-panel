@@ -14,6 +14,7 @@ public interface ClientRepository {
     List<Client> findAll();
 
     Map<String, Client> findAllActiveClients();
+    Map<String, Client> findAllClients();
 
     Optional<Client> findClientByUsername(String username);
 }

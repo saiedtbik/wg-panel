@@ -24,7 +24,6 @@ public class TrafficEntity {
 
     Long transferTx;
 
-//    @Enumerated(EnumType.STRING)
     TrafficStatus status;
 
     LocalDateTime createAt;

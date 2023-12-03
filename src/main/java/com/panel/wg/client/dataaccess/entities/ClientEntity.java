@@ -30,8 +30,5 @@ public class ClientEntity {
     List<TrafficEntity> trafficList = new ArrayList<>();
 
     @OneToOne
-    TrafficEntity currentTraffic;
-
-    @OneToOne
     UserEntity userEntity;
 }

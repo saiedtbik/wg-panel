@@ -9,7 +9,7 @@ public record CreateTrafficCommand(
         @NotNull
         @NotBlank
         String username,
-        @NotNull
+
         Long capacity,
         @NotNull
         @NotBlank

@@ -39,7 +39,7 @@ public class Traffic {
     public boolean hasCapacity() {
       //  return transferRx + transferTx < capacity;
 
-        return transferTx == null || (transferTx  < tempCapacity);
+        return (transferTx == null || transferRx == null) || (transferTx + transferRx  < tempCapacity);
     }
 
     public boolean isExpired() {

@@ -11,6 +11,8 @@ import com.panel.wg.client.applicationservice.commnadHandlers.ResetClientWgTrans
 import com.panel.wg.client.applicationservice.data.ClientRepository;
 import com.panel.wg.client.applicationservice.dtoes.CreateClientDto;
 import com.panel.wg.client.applicationservice.mapper.TrafficMapper;
+import com.panel.wg.client.dataaccess.entities.TrafficEntity;
+import com.panel.wg.client.dataaccess.repositories.TrafficJpaRepository;
 import com.panel.wg.client.domain.dtoes.TrafficDto;
 import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.client.domain.entities.Traffic;
@@ -35,7 +37,8 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     private final DisableClientHandler disableClientHandler;
     private final EnableClientHandler enableClientHandler;
     private final ResetClientWgTransferHandler resetClientWgTransferHandler;
-    private final WgProxyService wgProxyService;
+
+    private final TrafficJpaRepository trafficJpaRepository;
 
     @Override
     public CreateClientDto createClient(CreateClientCommand command) {
@@ -102,6 +105,7 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
         Traffic traffic = Traffic.builder()
                 .status(TrafficStatus.CREATED)
                 .capacity(command.capacity())
+                .tempCapacity(command.capacity())
                 .expirationDate(persianDate.toGregorian())
                 .createAt(LocalDateTime.now())
                 .build();
@@ -120,5 +124,14 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
                 .map(t -> TrafficMapper.toDto(t))
                 .sorted(Comparator.comparing(t -> t.createAt()))
                 .toList();
+    }
+
+    @Override
+    public void stop() {
+        List<TrafficEntity> trafficEntitiesByStatus = trafficJpaRepository.findTrafficEntitiesByStatus(TrafficStatus.ACTIVE);
+        for(TrafficEntity traffic : trafficEntitiesByStatus) {
+            traffic.setTempCapacity(traffic.getCapacity() - traffic.getTransferTx());
+            trafficJpaRepository.save(traffic);
+        }
     }
 }

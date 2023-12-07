@@ -23,7 +23,9 @@ public enum Authority {
 
     RESET_CLIENT_WG_TRAFFIC("rest_client_wg_traffic"),
     REST_ALL_CLIENTS_WG_TRAFFIC("reset_client_wg_traffic"),
-    GENERATE_USERS_FROM_WG_CLIENTS("generate_users_from_wg_clients")
+    GENERATE_USERS_FROM_WG_CLIENTS("generate_users_from_wg_clients"),
+
+    STOP("stop")
     ;
     @Getter
     private final String permission;

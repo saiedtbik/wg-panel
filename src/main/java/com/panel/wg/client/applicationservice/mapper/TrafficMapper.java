@@ -16,6 +16,7 @@ public class TrafficMapper {
         return Traffic.builder()
                 .id(entity.getId())
                 .capacity(entity.getCapacity())
+                .tempCapacity(entity.getTempCapacity())
                 .transferRx(entity.getTransferRx())
                 .transferTx(entity.getTransferTx())
                 .createdBy(entity.getCreatedBy())
@@ -32,6 +33,7 @@ public class TrafficMapper {
         TrafficEntity trafficEntity = new TrafficEntity();
         trafficEntity.setId(traffic.getId());
         trafficEntity.setCapacity(traffic.getCapacity());
+        trafficEntity.setTempCapacity(traffic.getTempCapacity());
         trafficEntity.setTransferRx(traffic.getTransferRx());
         trafficEntity.setTransferTx(traffic.getTransferTx());
         trafficEntity.setCreatedBy(traffic.getCreatedBy());

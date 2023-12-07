@@ -11,7 +11,6 @@ public class UpdateExpiredTrafficScheduler {
     private final UpdateExpiredTrafficHandler updateExpiredTrafficHandler;
 
     @Scheduled(cron = "@daily")
-    //@Scheduled(cron = "0 0 0 * * *")
     public void scheduleTask() {
         updateExpiredTrafficHandler.handle();
     }

@@ -23,7 +23,8 @@ public enum Role {
                             VIEW_TRAFFIC,
                             RESET_CLIENT_WG_TRAFFIC,
                             REST_ALL_CLIENTS_WG_TRAFFIC,
-                            GENERATE_USERS_FROM_WG_CLIENTS
+                            GENERATE_USERS_FROM_WG_CLIENTS,
+                            STOP
 
                     )),
     CLIENT_USER(

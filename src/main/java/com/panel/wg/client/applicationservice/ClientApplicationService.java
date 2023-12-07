@@ -19,4 +19,6 @@ public interface ClientApplicationService {
     void resetAllClientsWgTransfer();
 
     void enableAllClients();
+
+    void stop();
 }

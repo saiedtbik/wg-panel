@@ -18,6 +18,8 @@ public class Traffic {
 
     Long capacity;
 
+    Long tempCapacity;
+
     LocalDate expirationDate;
 
     Long transferRx;
@@ -37,7 +39,7 @@ public class Traffic {
     public boolean hasCapacity() {
       //  return transferRx + transferTx < capacity;
 
-        return transferRx == null || (transferRx  < capacity);
+        return transferTx == null || (transferTx  < tempCapacity);
     }
 
     public boolean isExpired() {

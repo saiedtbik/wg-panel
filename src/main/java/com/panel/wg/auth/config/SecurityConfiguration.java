@@ -57,6 +57,7 @@ public class SecurityConfiguration {
                             .requestMatchers(GET, "/api/v1/user/*/traffics").hasAnyAuthority(VIEW_TRAFFIC.name())
                             .requestMatchers(POST, "/api/v1/clients/rest-wg-transfer").hasAnyAuthority(REST_ALL_CLIENTS_WG_TRAFFIC.name())
                             .requestMatchers(POST, "/api/v1/user/*/client/rest-wg-transfer").hasAnyAuthority(RESET_CLIENT_WG_TRAFFIC.name())
+                            .requestMatchers(POST, "/api/v1/clients/stop").hasAnyAuthority(STOP.name())
                             .requestMatchers(POST, "/api/v1/user/create-from-wg-clients").hasAnyAuthority(GENERATE_USERS_FROM_WG_CLIENTS.name());
 
                     ;

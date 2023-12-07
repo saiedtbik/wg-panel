@@ -122,4 +122,14 @@ public class ApplicationController extends BaseController {
         userApplicationService.creatAllUserFromWgClients();
         return success();
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping("clients/stop")
+    public ResponseEntity stop() {
+        clientApplicationService.stop();
+        return success();
+    }
+
+
+
 }

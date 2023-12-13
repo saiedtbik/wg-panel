@@ -1,5 +1,7 @@
+
+let clientsTable ;
 $(document).ready(function () {
-    $('#policyListTable').DataTable({
+   clientsTable =   $('#clientListTable').DataTable({
         // "processing": true,
         // "serverSide": true,
         // "ajax": {
@@ -38,22 +40,21 @@ $(document).ready(function () {
             {data: "fullName", title: "نام", "width": "15%"},
             {data: "username", title: "نام کاربری", "width": "15%"},
             {data: "clientId", title: "شماره کلاینت", "width": "40%"},
-            {data: "jalaliCreateDate", title: "تاریخ ایجاد", "width": "10%"},
 
             {
-                title: "وضعیت",
-                data: "enabled",
-                width:"8%",
+                title: "وضعیت کلاینت",
+                data: "clientStatus",
+                width:"13%",
                 // className: "centeralign",
                 // "targets": 0,
                 "render": function (data, type, row, meta) {
 
-                    if (data == true) {
+                    if (data == "ACTIVE") {
                         return '<span class="badge bg-success">فعال</span>';
                         // return '<span className="badge bg-danger">Inactive</span>';
                     }
-                    if (data == false) {
-                        return '<span className="badge bg-danger">غیرفعال</span>';
+                    if (data == "DISABLED") {
+                        return '<span class="badge bg-danger">غیرفعال</span>';
                     }
 
                 }
@@ -63,20 +64,71 @@ $(document).ready(function () {
             {
                 title: "",
                 width:"10%",
-                data: 'enabled',
                 "render": function (data, type, row, meta) {
-                  return   '<div class="btn-group mb-1"> <div class="dropdown" > ' +
-                    '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
-                    'عملیات' +
-                    ' </button>' +
-                    ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
-                    '<a class="dropdown-item" href="#">غیرفعال</a>' +
-                    ' <a class="dropdown-item" href="#">حذف </a>' +
-                    ' <a class="dropdown-item" href="#">ویرایش</a>' +
-                    ' <a class="dropdown-item" href="#">بازیابی رمز عبور</a>' +
-                    ' </div> ' +
-                    '</div>' +
-                    '</div>';
+                    return ' <div class="modal-primary me-1 mb-1 d-inline-block">\n' +
+                        '                                        <!-- Button trigger for primary themes modal -->\n' +
+                        '                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"\n' +
+                        '                                            data-bs-target="#primary">\n' +
+                        '                                             ترافیک\n' +
+                        '                                        </button>\n' +
+                        '\n' +
+                        '                                        <!--primary theme Modal -->\n' +
+                        '                                        <div class="modal fade text-left" id="primary" tabindex="-1" role="dialog"\n' +
+                        '                                            aria-labelledby="myModalLabel160" aria-hidden="true">\n' +
+                        '                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"\n' +
+                        '                                                role="document">\n' +
+                        '                                                <div class="modal-content">\n' +
+                        '                                                    <div class="modal-header bg-primary">\n' +
+                        '                                                        <h5 class="modal-title white" id="myModalLabel160">Primary Modal\n' +
+                        '                                                        </h5>\n' +
+                        '                                                        <button type="button" class="close" data-bs-dismiss="modal"\n' +
+                        '                                                            aria-label="Close">\n' +
+                        '                                                            <i data-feather="x"></i>\n' +
+                        '                                                        </button>\n' +
+                        '                                                    </div>\n' +
+                        '                                                    <div class="modal-body">\n' +
+                        '                                                        Tart lemon drops macaroon oat cake chocolate toffee chocolate\n' +
+                        '                                                        bar icing. Pudding jelly beans\n' +
+                        '                                                        carrot cake pastry gummies cheesecake lollipop. I love cookie\n' +
+                        '                                                        lollipop cake I love sweet\n' +
+                        '                                                        gummi\n' +
+                        '                                                        bears cupcake dessert.\n' +
+                        '                                                    </div>\n' +
+                        '                                                    <div class="modal-footer">\n' +
+                        '                                                        <button type="button" class="btn btn-light-secondary"\n' +
+                        '                                                            data-bs-dismiss="modal">\n' +
+                        '                                                            <i class="bx bx-x d-block d-sm-none"></i>\n' +
+                        '                                                            <span class="d-none d-sm-block">Close</span>\n' +
+                        '                                                        </button>\n' +
+                        '                                                        <button type="button" class="btn btn-primary ms-1"\n' +
+                        '                                                            data-bs-dismiss="modal">\n' +
+                        '                                                            <i class="bx bx-check d-block d-sm-none"></i>\n' +
+                        '                                                            <span class="d-none d-sm-block">Accept</span>\n' +
+                        '                                                        </button>\n' +
+                        '                                                    </div>\n' +
+                        '                                                </div>\n' +
+                        '                                            </div>\n' +
+                        '                                        </div>\n' +
+                        '                                    </div>'
+                }
+
+            },
+
+            {
+                title: "",
+                width:"10%",
+                data: "clientId",
+                "render": function (data, type, row, meta) {
+                    return   '<div class="btn-group mb-1"> <div class="dropdown" > ' +
+                        '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
+                        'عملیات' +
+                        ' </button>' +
+                        ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
+                        '<a class="dropdown-item" >غیرفعال </a>' +
+                        ' <a class="dropdown-item" href="#">ریست ترافیک مصرفی</a>' +
+                        ' </div> ' +
+                        '</div>' +
+                        '</div>';
                 }
             }
         ],
@@ -142,6 +194,11 @@ $(document).ready(function () {
         "info": true
 
     });
+
+
+
+    // clientsTable.ajax.url( '/api/v1/user/d4e81806-575e-47cf-b645-b22082ada0f9/enable-client' ).load();
+
 });
 
 
@@ -462,12 +519,12 @@ $(document).ready(function () {
 //
 //
 //
-// // function callMyAction() {
-// //
-// //     setMyNewParameters( {'systemID':$('#systemID').val(),'tilte':$('#tilte').val(),'userID':$('#userID').val(),'taskTypeId':$('#taskTypeId').val(),'ticketCode':$('#ticketCode').val(),'priorityID':$('#priorityID').val(),'moduleID':$('#moduleID').val(),'fromDate':$('#fromDate').val(),'toDate':$('#toDate').val(),'taskState':$('#taskStateID').val()});
-// //     table.ajax.url( 'TaskActionSearchInboxTask' ).load();
-// //
-// // }
+// function callMyAction() {
+//
+//     setMyNewParameters( {'systemID':$('#systemID').val(),'tilte':$('#tilte').val(),'userID':$('#userID').val(),'taskTypeId':$('#taskTypeId').val(),'ticketCode':$('#ticketCode').val(),'priorityID':$('#priorityID').val(),'moduleID':$('#moduleID').val(),'fromDate':$('#fromDate').val(),'toDate':$('#toDate').val(),'taskState':$('#taskStateID').val()});
+//     table.ajax.url( 'TaskActionSearchInboxTask' ).load();
+//
+// }
 //
 //
 //

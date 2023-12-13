@@ -31,8 +31,8 @@ import java.util.Optional;
 @RequestMapping("api/v1")
 @CrossOrigin
 @ResponseStatus(HttpStatus.OK)
-@RestController
-public class ApplicationController extends BaseController {
+@org.springframework.web.bind.annotation.RestController
+public class RestController extends BaseController {
 
     private final UserApplicationService userApplicationService;
     private final ClientApplicationService clientApplicationService;

@@ -14,12 +14,12 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByApiKey(String apiKey);
 
-    @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status) from ClientEntity c inner join c.userEntity u where u.apiKey=:username")
+    @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status, u.createOn) from ClientEntity c inner join c.userEntity u where u.apiKey=:username")
     Optional<UserDto> findClientUserInfo(@Param("username") String username);
 
-    @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status) from ClientEntity c inner join c.userEntity u")
+    @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status, u.createOn) from ClientEntity c inner join c.userEntity u order by u.createOn asc ")
     List<UserDto> findAllClientUsersInfo();
 
-    @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status) from ClientEntity c inner join c.userEntity u where c.clientId=:clientId")
+    @Query(value = "select new com.panel.wg.user.domain.dtoes.UserDto(u.fullName, u.apiKey, u.enabled, c.clientId, c.status, u.createOn) from ClientEntity c inner join c.userEntity u where c.clientId=:clientId")
     Optional<UserDto> existsByClientId(@Param("clientId") String clientId);
 }

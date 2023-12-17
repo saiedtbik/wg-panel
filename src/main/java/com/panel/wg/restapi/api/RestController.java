@@ -42,7 +42,7 @@ public class RestController extends BaseController {
     @PostMapping("/user")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserCommand command) {
         UserDto createdUserDto = userApplicationService.createUser(command);
-        return success(createdUserDto);
+       return success(createdUserDto);
     }
 
 

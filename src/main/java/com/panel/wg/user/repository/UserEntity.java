@@ -19,6 +19,9 @@ public class UserEntity {
     private String fullName;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private String mobileNum;
+    private String email;
     private LocalDateTime createOn;
     private boolean enabled;
 

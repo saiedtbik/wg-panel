@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class UpdateExpiredTrafficScheduler {
     private final UpdateExpiredTrafficHandler updateExpiredTrafficHandler;
 
-    @Scheduled(cron = "@daily")
+//    @Scheduled(cron = "@daily")
     public void scheduleTask() {
         updateExpiredTrafficHandler.handle();
     }

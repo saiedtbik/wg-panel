@@ -74,7 +74,7 @@ public class ControllerAdvisor {
 
         ErrorResponse response = ErrorResponse.builder()
                 .status(ex.getError().getKey())
-                .message(messageSource.getMessage(ex.getError().getKey(), null, Locale.getDefault()))
+                .message(messageSource.getMessage(ex.getError().getKey(), null, Locale.UK))
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

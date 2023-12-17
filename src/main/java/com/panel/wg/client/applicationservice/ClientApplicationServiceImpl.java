@@ -104,8 +104,8 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
         PersianDate persianDate = PersianDate.parse(command.expirationDate(), Validator.DATE_TIME_FORMATTER);
         Traffic traffic = Traffic.builder()
                 .status(TrafficStatus.CREATED)
-                .capacity(command.capacity() != null ? command.capacity() : 100000000000l)
-                .tempCapacity(command.capacity() != null ? command.capacity() : 100000000000l)
+                .capacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
+                .tempCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
                 .expirationDate(persianDate.toGregorian())
                 .createAt(LocalDateTime.now())
                 .build();

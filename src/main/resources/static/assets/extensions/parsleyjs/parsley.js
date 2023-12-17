@@ -540,7 +540,7 @@
   var ValidatorRegistry = function ValidatorRegistry(validators, catalog) {
     this.__class__ = 'ValidatorRegistry'; // Default Parsley locale is en
 
-    this.locale = 'en';
+    this.locale = 'fa';
     this.init(validators || {}, catalog || {});
   };
 
@@ -2375,38 +2375,41 @@
     Parsley._remoteCache = {};
   });
 
+
   Base.prototype.addAsyncValidator = function () {
     Utils.warnOnce('Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`');
     return Parsley.addAsyncValidator.apply(Parsley, arguments);
   };
 
   // This is included with the Parsley library itself,
-  Parsley.addMessages('en', {
-    defaultMessage: "This value seems to be invalid.",
+  Parsley.addMessages('fa', {
+    defaultMessage: "این مقدار صحیح نمی باشد",
     type: {
-      email: "This value should be a valid email.",
-      url: "This value should be a valid url.",
-      number: "This value should be a valid number.",
-      integer: "This value should be a valid integer.",
-      digits: "This value should be digits.",
-      alphanum: "This value should be alphanumeric."
+      email:        "این مقدار باید یک ایمیل معتبر باشد",
+      url:          "این مقدار باید یک آدرس معتبر باشد",
+      number:       "این مقدار باید یک عدد معتبر باشد",
+      integer:      "این مقدار باید یک عدد صحیح معتبر باشد",
+      digits:       "این مقدار باید یک عدد باشد",
+      alphanum:     "این مقدار باید حروف الفبا باشد"
     },
-    notblank: "This value should not be blank.",
-    required: "This value is required.",
-    pattern: "This value seems to be invalid.",
-    min: "This value should be greater than or equal to %s.",
-    max: "This value should be lower than or equal to %s.",
-    range: "This value should be between %s and %s.",
-    minlength: "This value is too short. It should have %s characters or more.",
-    maxlength: "This value is too long. It should have %s characters or fewer.",
-    length: "This value length is invalid. It should be between %s and %s characters long.",
-    mincheck: "You must select at least %s choices.",
-    maxcheck: "You must select %s choices or fewer.",
-    check: "You must select between %s and %s choices.",
-    equalto: "This value should be the same.",
-    euvatin: "It's not a valid VAT Identification Number."
+    notblank:       "این مقدار نباید خالی باشد",
+    required:       "این مقدار باید وارد شود",
+    pattern:        "این مقدار به نظر می رسد نامعتبر است",
+    min:            "این مقدیر باید بزرگتر با مساوی %s باشد",
+    max:            "این مقدار باید کمتر و یا مساوی %s باشد",
+    range:          "این مقدار باید بین %s و %s باشد",
+    minlength:      "این مقدار بیش از حد کوتاه است. باید %s کاراکتر یا بیشتر باشد.",
+    maxlength:      "این مقدار بیش از حد طولانی است. باید %s کاراکتر یا کمتر باشد.",
+    length:         "این مقدار نامعتبر است و باید بین %s و %s باشد",
+    mincheck:       "شما حداقل باید %s گزینه را انتخاب کنید.",
+    maxcheck:       "شما حداکثر می‌توانید %s انتخاب داشته باشید.",
+    check:          "باید بین %s و %s مورد انتخاب کنید",
+    equalto:        "این مقدار باید یکسان باشد"
   });
-  Parsley.setLocale('en');
+
+
+
+  Parsley.setLocale('fa');
 
   function InputEvent() {
     var _this = this;

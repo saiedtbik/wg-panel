@@ -49,12 +49,17 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         if (userExistByApiKey(command.username())) {
             throw new BusinessRuleViolationException(UserError.USER_ALREADY_EXIST);
         }
+        if(!userPassAndRePassEqual(command)) {
+            throw  new BusinessRuleViolationException(UserError.USER_PASS_REPASS_NOT_EQUAL);
+        }
         User user = User.builder()
                 .apiKey(command.username())
                 .secretKey(passwordEncoder.encode(command.password()))
-                .fullName(command.fullName())
+                .fullName(command.firstName() + " " + command.lastName())
                 .role(Role.CLIENT_USER)
                 .createOn(LocalDateTime.now())
+                .mobileNum(command.mobileNumber())
+                .email(command.email())
                 .enabled(true)
                 .build();
         UserEntity userEntity = userRepository.save(UserDataMapper.toUserEntity(user));
@@ -73,6 +78,10 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 .clientId(clientDto.clientId())
                 .clientStatus(clientDto.status())
                 .build();
+    }
+
+    private boolean userPassAndRePassEqual(CreateUserCommand command) {
+     return command.password().equals(command.repassword());
     }
 
     @Transactional

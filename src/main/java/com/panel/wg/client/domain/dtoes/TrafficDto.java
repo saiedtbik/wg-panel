@@ -2,15 +2,17 @@ package com.panel.wg.client.domain.dtoes;
 
 import com.panel.wg.client.domain.valueObjects.TrafficStatus;
 import lombok.Builder;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
 public record TrafficDto(
-    Long capacity,
+    String capacity,
     String expirationDate,
-    Long transferRx,
-    Long transferTx,
+    String transferRx,
+    String transferTx,
     TrafficStatus status,
-    LocalDateTime createAt
+    String createAt
 ){
 }

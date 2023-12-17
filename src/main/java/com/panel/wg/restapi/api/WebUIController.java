@@ -14,20 +14,24 @@ public class WebUIController {
 
     @GetMapping(value = {"/", "/index", "/add-user"})
     public String indexMain(Model model) {
-        log.info("web controller class paramaters as model");
-
         return "add-user-page";
     }
 
     @GetMapping("/view-users")
-    public String applicationChat() {
+    public String viewUser() {
         return "view-users-page";
     }
 
     @GetMapping("/view-traffics")
-    public String applicationCheckout() {
+    public String viewTraffic() {
         return "traffic-config-page";
     }
+
+    @GetMapping("/load-user")
+    public String loadUserPage() {
+        return "load-user-page";
+    }
+
 
     @GetMapping("/application-email")
     public String applicationEmail() {

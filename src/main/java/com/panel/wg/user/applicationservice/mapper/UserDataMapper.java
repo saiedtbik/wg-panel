@@ -21,6 +21,8 @@ public class UserDataMapper {
                 .role(Role.valueOf(entity.getRole().name()))
                 .createOn(entity.getCreateOn())
                 .enabled(entity.isEnabled())
+                .email(entity.getEmail())
+                .mobileNum(entity.getMobileNum())
                 .build();
         return user;
     }
@@ -38,6 +40,8 @@ public class UserDataMapper {
         entity.setRole(user.getRole());
         entity.setEnabled(user.isEnabled());
         entity.setCreateOn(user.getCreateOn());
+        entity.setEmail(user.getEmail());
+        entity.setMobileNum(user.getMobileNum());
         return entity;
     }
 

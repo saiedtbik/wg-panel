@@ -1,0 +1,16 @@
+.custom-table {
+
+    background-color: #f1f7fb;
+    /* Additional table styles as needed */
+}
+
+.custom-table  tr {
+    background-color: #b24d28;
+    font-weight: bold;
+    /* Additional header styles as needed */
+}
+
+.custom-table td {
+
+    /* Additional body cell styles as needed */
+}

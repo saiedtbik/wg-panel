@@ -12,19 +12,26 @@ public record UserDto(
         String username,
         boolean enabled,
         String clientId,
+
         ClientStatus clientStatus,
-        LocalDateTime createDate) {
-    public UserDto(String fullName, String username, boolean enabled, String clientId, ClientStatus clientStatus, LocalDateTime createDate) {
+        LocalDateTime createDate,
+
+        String mobileNum,
+        String email
+) {
+    public UserDto(String fullName, String username, boolean enabled, String clientId, ClientStatus clientStatus, LocalDateTime createDate, String mobileNum, String email) {
         this.fullName = fullName;
         this.username = username;
         this.enabled = enabled;
         this.clientId = clientId;
         this.clientStatus = clientStatus;
         this.createDate = createDate;
+        this.mobileNum = mobileNum;
+        this.email = email;
     }
 
     public String getJalaliCreateDate() {
-        return PersianDate.fromGregorian(createDate.toLocalDate()).toString();
+        return this.createDate == null ? null : PersianDate.fromGregorian(createDate.toLocalDate()).toString();
     }
 
 }

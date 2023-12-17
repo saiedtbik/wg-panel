@@ -1,5 +1,7 @@
+
+let userTable;
 $(document).ready(function () {
-    $('#policyListTable').DataTable({
+    userTable = $('#policyListTable').DataTable({
         // "processing": true,
         // "serverSide": true,
         // "ajax": {
@@ -35,15 +37,18 @@ $(document).ready(function () {
             //     }
             //
             // },
-            {data: "fullName", title: "نام", "width": "15%"},
-            {data: "username", title: "نام کاربری", "width": "15%"},
-            {data: "clientId", title: "شماره کلاینت", "width": "40%"},
-            {data: "jalaliCreateDate", title: "تاریخ ایجاد", "width": "10%"},
+            {data: "fullName", title: "نام", width: "10%"},
+            // {data: "clientId", title: "شماره کلاینت", width: "40%"},
+            {data: "username", title: "نام کاربری", width: "5%"},
+            {data: "mobileNum", title: "موبایل", width: "10%"},
+            {data: "email", title: "ایمیل", width: "12%"},
+            {data: "jalaliCreateDate", title: "تاریخ ایجاد", width: "10%"},
+
 
             {
                 title: "وضعیت",
                 data: "enabled",
-                width:"8%",
+                width: "8%",
                 // className: "centeralign",
                 // "targets": 0,
                 "render": function (data, type, row, meta) {
@@ -60,25 +65,26 @@ $(document).ready(function () {
 
             },
 
-            {
-                title: "",
-                width:"10%",
-                data: 'enabled',
-                "render": function (data, type, row, meta) {
-                  return   '<div class="btn-group mb-1"> <div class="dropdown" > ' +
-                    '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
-                    'عملیات' +
-                    ' </button>' +
-                    ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
-                    '<a class="dropdown-item" href="#">غیرفعال</a>' +
-                    ' <a class="dropdown-item" href="#">حذف </a>' +
-                    ' <a class="dropdown-item" href="#">ویرایش</a>' +
-                    ' <a class="dropdown-item" href="#">بازیابی رمز عبور</a>' +
-                    ' </div> ' +
-                    '</div>' +
-                    '</div>';
-                }
-            }
+            // {
+            //     title: "",
+            //     width: "5%",
+            //     data: 'enabled',
+            //     'className': 'outBox-control',
+            //     "render": function (data, type, row, meta) {
+            //         return '<div class="btn-group mb-1"> <div class="dropdown" > ' +
+            //             '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
+            //             'عملیات' +
+            //             ' </button>' +
+            //             ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
+            //             ' <a class="dropdown-item deactive" href="#">غیرفعال</a>' +
+            //             ' <a class="dropdown-item" href="#">حذف </a>' +
+            //             ' <a class="dropdown-item" href="#">ویرایش</a>' +
+            //             ' <a class="dropdown-item" href="#">بازیابی رمز عبور</a>' +
+            //             ' </div> ' +
+            //             '</div>' +
+            //             '</div>';
+            //     }
+            // }
         ],
 
 
@@ -142,6 +148,8 @@ $(document).ready(function () {
         "info": true
 
     });
+
+
 });
 
 

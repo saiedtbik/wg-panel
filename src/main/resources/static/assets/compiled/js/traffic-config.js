@@ -1,7 +1,6 @@
-
-let clientsTable ;
+let clientsTable;
 $(document).ready(function () {
-   clientsTable =   $('#clientListTable').DataTable({
+    clientsTable = $('#clientListTable').DataTable({
         // "processing": true,
         // "serverSide": true,
         // "ajax": {
@@ -37,14 +36,20 @@ $(document).ready(function () {
             //     }
             //
             // },
+            {
+                className: 'sorting_1 dt-control',
+                orderable: false,
+                data: null,
+                defaultContent: ''
+            },
             {data: "fullName", title: "نام", "width": "15%"},
             {data: "username", title: "نام کاربری", "width": "15%"},
             {data: "clientId", title: "شماره کلاینت", "width": "40%"},
 
             {
-                title: "وضعیت کلاینت",
+                title: "وضعیت ",
                 data: "clientStatus",
-                width:"13%",
+                width: "13%",
                 // className: "centeralign",
                 // "targets": 0,
                 "render": function (data, type, row, meta) {
@@ -63,74 +68,52 @@ $(document).ready(function () {
 
             {
                 title: "",
-                width:"10%",
+                width: "10%",
+                'className': 'outBox-control',
                 "render": function (data, type, row, meta) {
-                    return ' <div class="modal-primary me-1 mb-1 d-inline-block">\n' +
-                        '                                        <!-- Button trigger for primary themes modal -->\n' +
-                        '                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"\n' +
-                        '                                            data-bs-target="#primary">\n' +
-                        '                                             ترافیک\n' +
-                        '                                        </button>\n' +
-                        '\n' +
-                        '                                        <!--primary theme Modal -->\n' +
-                        '                                        <div class="modal fade text-left" id="primary" tabindex="-1" role="dialog"\n' +
-                        '                                            aria-labelledby="myModalLabel160" aria-hidden="true">\n' +
-                        '                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"\n' +
-                        '                                                role="document">\n' +
-                        '                                                <div class="modal-content">\n' +
-                        '                                                    <div class="modal-header bg-primary">\n' +
-                        '                                                        <h5 class="modal-title white" id="myModalLabel160">Primary Modal\n' +
-                        '                                                        </h5>\n' +
-                        '                                                        <button type="button" class="close" data-bs-dismiss="modal"\n' +
-                        '                                                            aria-label="Close">\n' +
-                        '                                                            <i data-feather="x"></i>\n' +
-                        '                                                        </button>\n' +
-                        '                                                    </div>\n' +
-                        '                                                    <div class="modal-body">\n' +
-                        '                                                        Tart lemon drops macaroon oat cake chocolate toffee chocolate\n' +
-                        '                                                        bar icing. Pudding jelly beans\n' +
-                        '                                                        carrot cake pastry gummies cheesecake lollipop. I love cookie\n' +
-                        '                                                        lollipop cake I love sweet\n' +
-                        '                                                        gummi\n' +
-                        '                                                        bears cupcake dessert.\n' +
-                        '                                                    </div>\n' +
-                        '                                                    <div class="modal-footer">\n' +
-                        '                                                        <button type="button" class="btn btn-light-secondary"\n' +
-                        '                                                            data-bs-dismiss="modal">\n' +
-                        '                                                            <i class="bx bx-x d-block d-sm-none"></i>\n' +
-                        '                                                            <span class="d-none d-sm-block">Close</span>\n' +
-                        '                                                        </button>\n' +
-                        '                                                        <button type="button" class="btn btn-primary ms-1"\n' +
-                        '                                                            data-bs-dismiss="modal">\n' +
-                        '                                                            <i class="bx bx-check d-block d-sm-none"></i>\n' +
-                        '                                                            <span class="d-none d-sm-block">Accept</span>\n' +
-                        '                                                        </button>\n' +
-                        '                                                    </div>\n' +
-                        '                                                </div>\n' +
-                        '                                            </div>\n' +
-                        '                                        </div>\n' +
-                        '                                    </div>'
+
+                    return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon tablebutton  btn-success mr-0">\n' +
+                        ' شارژ\n' +
+                        ' </button>'
                 }
 
             },
 
             {
                 title: "",
-                width:"10%",
-                data: "clientId",
+                width: "10%",
+                data: "clientStatus",
+                'className': 'outBox-control',
                 "render": function (data, type, row, meta) {
-                    return   '<div class="btn-group mb-1"> <div class="dropdown" > ' +
-                        '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
-                        'عملیات' +
-                        ' </button>' +
-                        ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
-                        '<a class="dropdown-item" >غیرفعال </a>' +
-                        ' <a class="dropdown-item" href="#">ریست ترافیک مصرفی</a>' +
-                        ' </div> ' +
-                        '</div>' +
-                        '</div>';
+
+                    if (data == "ACTIVE") {
+                        return '<div class="btn-group mb-1"> <div class="dropdown" > ' +
+                            '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
+                            'عملیات' +
+                            ' </button>' +
+                            ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
+                            '<a class="dropdown-item deactive" href="#">غیرفعال </a>' +
+                            ' <a class="dropdown-item reset-traffic" href="#">ریست ترافیک مصرفی</a>' +
+                            ' </div> ' +
+                            '</div>' +
+                            '</div>';
+                    }
+                    if (data == "DISABLED") {
+                        return '<div class="btn-group mb-1"> <div class="dropdown" > ' +
+                            '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
+                            'عملیات' +
+                            ' </button>' +
+                            ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
+                            '<a class="dropdown-item activate" href="#">فعال </a>' +
+                            ' <a class="dropdown-item reset-traffic" href="#">ریست ترافیک مصرفی</a>' +
+                            ' </div> ' +
+                            '</div>' +
+                            '</div>';
+                    }
+
+
                 }
-            }
+            },
         ],
 
 
@@ -196,11 +179,335 @@ $(document).ready(function () {
     });
 
 
-
     // clientsTable.ajax.url( '/api/v1/user/d4e81806-575e-47cf-b645-b22082ada0f9/enable-client' ).load();
+
+
+    $('#clientListTable tbody').on('click', 'td.outBox-control button.btn-success', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable.row(tr);
+        var username = row.data().username;
+
+        // Show modal
+        $("#inlineForm").css("display", "block");
+
+        // Set hidden input variable value
+        $("#username").val(username);
+
+        // Handle the close button functionality
+        // $(".close").click(function() {
+        //     $("#inlineForm").css("display", "none");
+        // });
+
+    });
+
+    clientsTable.on('click', 'td.dt-control', function (e) {
+        let tr = e.target.closest('tr');
+        let row = clientsTable.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+        }
+    });
+
+
+    $("#add-traffic-form").submit(function (event) {
+        // Get values from input fields
+        var username = $('#username').val();
+        var capacity = $('#capacity').val();
+        var expirationDate = $('#expire-date').val();
+
+
+        // Create data object to be sent in POST request
+        var postData = {
+            username: username,
+            capacity: capacity,
+            expirationDate: expirationDate,
+        };
+
+        // AJAX POST request
+
+        $.ajax({
+            url: '/api/v1/user/add-traffic',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(postData),
+            success: function (response, textStatus, xhr) {
+                $("#inlineForm").hide();
+                clientsTable.ajax.reload();
+
+            },
+            error: function (xhr, status, error) {
+
+            }
+
+        });
+        event.preventDefault();
+    });
+
+
+    $('#close-modal-Btn').click(function () {
+        $("#inlineForm").hide();
+
+    });
+
+
+    /*------------------------------------------------ disable client and reset traffic ----------------------*/
+
+    clientsTable.on('click', 'td.outBox-control a.deactive', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable.row(tr);
+        var username = row.data().username;
+
+        $.ajax({
+            url: '/api/v1/user/' + username + '/disable-client',
+            type: 'POST',
+            contentType: 'application/json',
+            // data: JSON.stringify(postData),
+            success: function (response, textStatus, xhr) {
+                clientsTable.ajax.reload();
+            },
+            error: function (xhr, status, error) {
+
+            }
+
+        });
+    });
+
+
+    clientsTable.on('click', 'td.outBox-control a.activate', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable.row(tr);
+        var username = row.data().username;
+
+        $.ajax({
+            url: '/api/v1/user/' + username + '/enable-client',
+            type: 'POST',
+            contentType: 'application/json',
+            // data: JSON.stringify(postData),
+            success: function (response, textStatus, xhr) {
+                clientsTable.ajax.reload();
+            },
+            error: function (xhr, status, error) {
+
+            }
+
+        });
+    });
+
+
+    clientsTable.on('click', 'td.outBox-control a.reset-traffic', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable.row(tr);
+        var username = row.data().username;
+
+        $.ajax({
+            url: '/api/v1/user/' + username + '/client/rest-wg-transfer',
+            type: 'POST',
+            contentType: 'application/json',
+            // data: JSON.stringify(postData),
+            success: function (response, textStatus, xhr) {
+                $('#success-msg').text("پیغام‌: ترافیک کاربر با موفقیت ریست شد.");
+                $('#success-msg').show();
+
+                setTimeout(function() {
+                    $('#success-msg').hide();
+
+                }, 4000);
+
+            },
+            error: function (xhr, status, error) {
+                $('#failed_msg').text( "پیغام خطا: "  + xhr.responseJSON.message  );
+                $('#failed_msg').show();
+                setTimeout(function() {
+                    $('#failed_msg').hide();
+
+                }, 4000);
+            }
+
+        });
+
+    });
+
+
 
 });
 
+
+
+function format(d) {
+    // `d` is the original data object for the row
+
+    return (
+        '<div class="table-responsive" style="font-size: 13px">\n' +
+        '          <!--                            <table class="table" id="policyListTable1">-->\n' +
+        '          <table class=" custom-table table table-striped table-bordered table-hover "  id="clientListTable1"  style="direction:rtl; width: 70%; text-align: center;  margin: 0 auto; "   ></table>\n' +
+        '          <!--                            </table>-->\n' +
+        '        </div>' +
+        '<script>' +
+        '$(document).ready(function () {\n' +
+        '    clientsTable1 = $(\'#clientListTable1\').DataTable({\n' +
+        '        // "processing": true,\n' +
+        '        // "serverSide": true,\n' +
+        '        // "ajax": {\n' +
+        '        //\n' +
+        '        //     "url": "/api/v1/user/all",\n' +
+        '        //     "type": "GET",\n' +
+        '        //     "data": function (d) {\n' +
+        '        //         alert(d);\n' +
+        '        //         var customParams = getMyNewParameters();\n' +
+        '        //         var params = jQuery.isEmptyObject(customParams) ? d : customParams;\n' +
+        '        //         return params;\n' +
+        '        //     },\n' +
+        '        //     dataSrc: \'\'\n' +
+        '        //\n' +
+        '        // },\n' +
+        '\n' +
+        '\n' +
+        '        ajax: {\n' +
+        '            url: \'/api/v1/user/' + d.username + '/traffics\',\n' +
+        '            dataSrc: \'\'\n' +
+        '        },\n' +
+
+        '        columns: [\n' +
+        '            //\n' +
+        '            // {\n' +
+        '            //     data: "true",\n' +
+        '            //     defaultContent: \'\',\n' +
+        '            //     "render": function (data, type, row, meta) {\n' +
+        '            //         if (data == true) {\n' +
+        '            //             return \' <div style="font-weight: bold; color: #00A000"> <img src="/icon/ok.ico" alt="" width="15" height="15" data-toggle="tooltip" title="طرح انتخاب شده"> طرح انتخاب شده</div>\';\n' +
+        '            //         } else {\n' +
+        '            //             return \'\';\n' +
+        '            //         }\n' +
+        '            //     }\n' +
+        '            //\n' +
+        '            // },\n' +
+
+        '            {data: "capacity", title: "ظرفیت", "width": "15%"},\n' +
+        '            {data: "expirationDate", title: "تاریخ انقضا", "width": "15%"},\n' +
+        '            {data: "transferRx", title: "حجم آپلود", "width": "15%"},\n' +
+        '            {data: "transferTx", title: "حجم دانلود", "width": "15%"},\n' +
+        '            {data: "createAt", title: "تاریخ ایجاد", "width": "15%"},\n' +
+        '\n' +
+        '            {\n' +
+        '                title: "وضعیت ",\n' +
+        '                data: "status",\n' +
+        '                width: "13%",\n' +
+        '                // className: "centeralign",\n' +
+        '                // "targets": 0,\n' +
+        '                "render": function (data, type, row, meta) {\n' +
+        '\n' +
+        '                    if (data == "ACTIVE") {\n' +
+        '                        return \'<span class="badge bg-success">فعال</span>\';\n' +
+        '                        // return \'<span className="badge bg-danger">Inactive</span>\';\n' +
+        '                    }\n' +
+        '                    else if (data == "CREATED") {\n' +
+        '                        return \'<span class="badge bg-info">غیر فعال</span>\';\n' +
+        '                    }\n' +
+        '                    else if (data == "NO_CAPACITY") {\n' +
+        '                        return \'<span class="badge bg-danger">ظرفیت ندارد</span>\';\n' +
+        '                    }\n' +
+        '                    else if (data == "EXPIRED") {\n' +
+        '                        return \'<span class="badge bg-warning">منقضی</span>\';\n' +
+        '                    }\n' +
+        '\n' +
+        '                }\n' +
+        '\n' +
+        '            },\n' +
+        '\n' +
+
+        '\n' +
+        '            {\n' +
+        '                title: "",\n' +
+        '                width: "10%",\n' +
+        '                data: "clientId",\n' +
+        '                "render": function (data, type, row, meta) {\n' +
+        '                    return \'<button class="btn btn-sm icon btn-danger"><i class="bi bi-x"></i></button>\';\n' +
+        '                }\n' +
+        '            }\n' +
+        '        ],\n' +
+        '\n' +
+        '\n' +
+        '        dom: \'Bfrtip\',\n' +
+        '        buttons: [\n' +
+        '            {\n' +
+        '                extend: \'copyHtml5\',\n' +
+        '                text: \'<i class="fa fa-files-o"></i>\',\n' +
+        '                titleAttr: \'Copy\'\n' +
+        '            },\n' +
+        '            {\n' +
+        '                extend: \'excelHtml5\',\n' +
+        '                text: \'<i class="fa fa-file-excel-o"></i>\',\n' +
+        '                titleAttr: \'Excel\'\n' +
+        '            },\n' +
+        '            {\n' +
+        '                extend: \'csvHtml5\',\n' +
+        '                text: \'<i class="fa fa-file-text-o"></i>\',\n' +
+        '                titleAttr: \'CSV\'\n' +
+        '            },\n' +
+        '            {\n' +
+        '                extend: \'pdfHtml5\',\n' +
+        '                text: \'<i class="fa fa-file-pdf-o"></i>\',\n' +
+        '                titleAttr: \'PDF\'\n' +
+        '            }\n' +
+        '\n' +
+        '        ],\n' +
+        '\n' +
+        '        direction: \'rtl\',\n' +
+        '\n' +
+        '        "language": {\n' +
+        '            "decimal": "",\n' +
+        '            "emptyTable": "هیچ داده ای در جدول وجود ندارد",\n' +
+        '            "info": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",\n' +
+        '            "infoEmpty": "نمایش 0 تا 0 از 0 رکورد",\n' +
+        '            "infoFiltered": "(فیلتر شده از _MAX_ رکورد)",\n' +
+        '            "infoPostFix": "",\n' +
+        '            "infoThousands": ",",\n' +
+        '            "lengthMenu": "نمایش _MENU_ رکورد",\n' +
+        '            "loadingRecords": "در حال بارگزاری...",\n' +
+        '            "processing": "در حال پردازش...",\n' +
+        '            "search": "فیلتر:",\n' +
+        '            "zeroRecords": "رکوردی با این مشخصات پیدا نشد",\n' +
+        '            "paginate": {\n' +
+        '                "first": "ابتدا",\n' +
+        '                "last": "انتها",\n' +
+        '                "next": "بعدی",\n' +
+        '                "previous": "قبلی"\n' +
+        '            },\n' +
+        '            "aria": {\n' +
+        '                "sortAscending": ": فعال سازی نمایش به صورت صعودی",\n' +
+        '                "sortDescending": ": فعال سازی نمایش به صورت نزولی"\n' +
+        '            }\n' +
+        '        },\n' +
+        '\n' +
+        '\n' +
+        '        "paging": false,\n' +
+        '        "pageLength": 3,\n' +
+        '        searching: false,\n' +
+        '\n' +
+        '    });' +
+        '    });' +
+        '</script>'
+    );
+    // return (
+    //     '<dl>' +
+    //     '<dt>Full name:</dt>' +
+    //     '<dd>' +
+    //     d.fullName +
+    //     '</dd>' +
+    //     '<dt>Extension number:</dt>' +
+    //     '<dd>' +
+    //     d.fullName +
+    //     '</dd>' +
+    //     '<dt>Extra info:</dt>' +
+    //     '<dd>And any further details here (images etc)...</dd>' +
+    //     '</dl>'
+    // );
+}
 
 //
 // var myCustomParams = {};

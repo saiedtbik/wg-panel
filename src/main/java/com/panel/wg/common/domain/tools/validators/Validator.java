@@ -17,6 +17,9 @@ import java.util.stream.IntStream;
 public final class Validator {
     private static final BigInteger NINETY_SEVEN = new BigInteger("97");
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+    public static final DateTimeFormatter DATE_TIME_FORMATTER_With_LINE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public static final DateTimeFormatter YEAR_MONTH_DAY_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyMMdd");
 
     /**

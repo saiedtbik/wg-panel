@@ -16,6 +16,8 @@ public class User {
     private String secretKey;
     private String fullName;
     private Role role;
+    private String mobileNum;
+    private String email;
     private LocalDateTime createOn;
     private boolean enabled;
 

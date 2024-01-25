@@ -171,8 +171,8 @@ $(document).ready(function () {
 
 
         "orderable": true,
-        "paging": true,
-        "pageLength": 8,
+        "paging": false,
+        // "pageLength": 8,
         searching: true,
         "info": true
 

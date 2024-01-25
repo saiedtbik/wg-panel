@@ -26,11 +26,12 @@ public class CheckTrafficHandler {
                 if (!c.getCurrentTraffic().isPresent()) {
                     c.setActiveTraffic();
                     resetClientWgTransferHandler.handle(c.getClientId());
+                    clientRepository.add(c);
                 } else {
                     boolean isChanged = c.changeTrafficIfNeeded();
-                     if(isChanged) {
-                         resetClientWgTransferHandler.handle(c.getClientId());
-                     }
+                    if (isChanged) {
+                        resetClientWgTransferHandler.handle(c.getClientId());
+                    }
                 }
 
             } catch (BusinessRuleViolationException e) {
@@ -38,7 +39,7 @@ public class CheckTrafficHandler {
                 c.disableClient();
                 clientRepository.add(c);
             }
-            clientRepository.add(c);
+
         }
     }
 }

@@ -9,8 +9,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class WgPanelApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WgPanelApplication.class, args);
-	}
+    public static void main(String[] args) {
+
+            SpringApplication.run(WgPanelApplication.class, args);
+
+    }
 
 }

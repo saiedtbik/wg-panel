@@ -135,20 +135,10 @@
                                 <a href="load-config" class="submenu-link">تنظیمات فایل کانفیگ</a>
 
                             </li>
+
                         </ul>
 
                     </li>
-
-
-<!--                    <li-->
-<!--                            class="sidebar-item  ">-->
-<!--                        <a href="table" class='sidebar-link'>-->
-<!--                            <i class="bi bi-grid-1x2-fill"></i>-->
-<!--                            <span>خروج</span>-->
-<!--                        </a>-->
-
-
-<!--                    </li>-->
 
 
                 </ul>
@@ -183,7 +173,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form id="add-user-form" class="form form-horizontal" data-parsley-validate>
+                            <form id="add-config-form" class="form form-horizontal" data-parsley-validate>
                                 <div class="form-body">
                                     <div class="row">
 <!--                                        <div class="col-md-4">-->
@@ -224,16 +214,16 @@
 
 
                                         <div class="col-md-4">
-                                            <label>نام کاربری</label>
+                                            <label>کانفیگ</label>
                                         </div>
 
                                         <div class="col-md-8">
                                             <div class="form-group has-icon-left">
                                                 <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="نام کاربری"
-                                                           id="username" name="username"
+                                                    <input type="text" class="form-control" placeholder=""
+                                                           id="config-url" name="config-url"
                                                            data-parsley-required="true"
-                                                           data-parsley-error-message="نام کاربری را وارد کنید">
+                                                           data-parsley-error-message="مقدار را وارد کنید">
                                                     <div class="form-control-icon">
                                                         <i class="bi bi-person"></i>
                                                     </div>
@@ -241,83 +231,6 @@
                                             </div>
                                         </div>
 
-
-<!--                                        <div class="col-md-4">-->
-<!--                                            <label>کلمه عبور</label>-->
-<!--                                        </div>-->
-
-<!--                                        <div class="col-md-8">-->
-<!--                                            <div class="form-group has-icon-left">-->
-<!--                                                <div class="position-relative">-->
-<!--                                                    <input type="password" class="form-control"-->
-<!--                                                           placeholder="کلمه عبور" id="password" name="password"-->
-<!--                                                           data-parsley-required="true"-->
-<!--                                                           data-parsley-error-message=" کلمه عبور را وارد کنید">-->
-<!--                                                    <div class="form-control-icon">-->
-<!--                                                        <i class="bi bi-lock"></i>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-
-<!--                                        <div class="col-md-4">-->
-<!--                                            <label>تکرار کلمه عبور</label>-->
-
-<!--                                        </div>-->
-
-<!--                                        <div class="col-md-8">-->
-<!--                                            <div class="form-group has-icon-left">-->
-<!--                                                <div class="position-relative">-->
-<!--                                                    <input type="password"-->
-<!--                                                           class="form-control" placeholder="تکرار کلمه عبور"-->
-<!--                                                           id="repassword" name="repassword"-->
-<!--                                                           data-parsley-required="true"-->
-<!--                                                           data-parsley-error-message="تکرار کلمه عبور را وارد کنید"-->
-<!--                                                    >-->
-<!--                                                    <div class="form-control-icon">-->
-<!--                                                        <i class="bi bi-lock"></i>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-
-                                        <div class="col-md-4">
-                                            <label>ایمیل</label>
-                                        </div>
-
-
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="email" class="form-control" placeholder="ایمیل"
-                                                           id="email" name="email"
-                                                           data-parsley-error-message="ایمیل معتبر نیست">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-envelope"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label>موبایل</label>
-                                        </div>
-
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="موبایل"
-                                                           id="mobileNumber" name="mobileNumber"
-                                                           data-parsley-pattern = "/^\d+$/"
-                                                           data-parsley-error-message="شماره موبایل معتبر نیست">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-phone"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
 
                                         <div class="col-md-4">

@@ -42,28 +42,74 @@ $(document).ready(function () {
                 data: null,
                 defaultContent: ''
             },
-            {data: "fullName", title: "نام", "width": "15%"},
             {data: "username", title: "نام کاربری", "width": "15%"},
-            {data: "clientId", title: "شماره کلاینت", "width": "40%"},
+            {data: "mobileNum", title: "موبایل", "width": "15%"},
+            {data: "email", title: "ایمیل", "width": "40%"},
+
+            // {
+            //     title: "وضعیت ",
+            //     data: "clientStatus",
+            //     width: "13%",
+            //     // className: "centeralign",
+            //     // "targets": 0,
+            //     "render": function (data, type, row, meta) {
+            //
+            //         if (data == "ACTIVE") {
+            //             return '<span class="badge bg-success">فعال</span>';
+            //             // return '<span className="badge bg-danger">Inactive</span>';
+            //         }
+            //         if (data == "DISABLED") {
+            //             return '<span class="badge bg-danger">غیرفعال</span>';
+            //         }
+            //
+            //     }
+            //
+            // },
 
             {
                 title: "وضعیت ",
+                width: "10%",
                 data: "clientStatus",
-                width: "13%",
-                // className: "centeralign",
-                // "targets": 0,
+                'className': 'outBox-control',
                 "render": function (data, type, row, meta) {
 
                     if (data == "ACTIVE") {
-                        return '<span class="badge bg-success">فعال</span>';
-                        // return '<span className="badge bg-danger">Inactive</span>';
+
+                        return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon tablebutton deactive btn-success mr-0">\n' +
+                            ' فعال \n' +
+                            ' </button>';
+
+                        // return '<div class="btn-group mb-1"> <div class="dropdown" > ' +
+                        //     '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
+                        //     'عملیات' +
+                        //     ' </button>' +
+                        //     ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
+                        //     '<a class="dropdown-item" href="#">غیرفعال </a>' +
+                        //     ' <a class="dropdown-item reset-traffic" href="#">ریست ترافیک مصرفی</a>' +
+                        //     ' </div> ' +
+                        //     '</div>' +
+                        //     '</div>';
                     }
                     if (data == "DISABLED") {
-                        return '<span class="badge bg-danger">غیرفعال</span>';
+
+                        return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon tablebutton activate  btn-danger mr-0">\n' +
+                            'غیرفعال \n' +
+                            ' </button>';
+
+                        // return '<div class="btn-group mb-1"> <div class="dropdown" > ' +
+                        //     '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
+                        //     'عملیات' +
+                        //     ' </button>' +
+                        //     ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
+                        //     '<a class="dropdown-item activate" href="#">فعال </a>' +
+                        //     ' <a class="dropdown-item reset-traffic" href="#">ریست ترافیک مصرفی</a>' +
+                        //     ' </div> ' +
+                        //     '</div>' +
+                        //     '</div>';
                     }
 
-                }
 
+                }
             },
 
             {
@@ -72,7 +118,7 @@ $(document).ready(function () {
                 'className': 'outBox-control',
                 "render": function (data, type, row, meta) {
 
-                    return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon tablebutton  btn-success mr-0">\n' +
+                    return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon tablebutton  btn-success charge  mr-0">\n' +
                         ' شارژ\n' +
                         ' </button>'
                 }
@@ -82,38 +128,44 @@ $(document).ready(function () {
             {
                 title: "",
                 width: "10%",
-                data: "clientStatus",
                 'className': 'outBox-control',
                 "render": function (data, type, row, meta) {
 
-                    if (data == "ACTIVE") {
-                        return '<div class="btn-group mb-1"> <div class="dropdown" > ' +
-                            '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
-                            'عملیات' +
-                            ' </button>' +
-                            ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
-                            '<a class="dropdown-item deactive" href="#">غیرفعال </a>' +
-                            ' <a class="dropdown-item reset-traffic" href="#">ریست ترافیک مصرفی</a>' +
-                            ' </div> ' +
-                            '</div>' +
-                            '</div>';
-                    }
-                    if (data == "DISABLED") {
-                        return '<div class="btn-group mb-1"> <div class="dropdown" > ' +
-                            '<button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton" data-bs-toggle= "dropdown" aria-haspopup="true"aria-expanded="false">' +
-                            'عملیات' +
-                            ' </button>' +
-                            ' <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> ' +
-                            '<a class="dropdown-item activate" href="#">فعال </a>' +
-                            ' <a class="dropdown-item reset-traffic" href="#">ریست ترافیک مصرفی</a>' +
-                            ' </div> ' +
-                            '</div>' +
-                            '</div>';
-                    }
-
-
+                    return '  <button id="traffic-btn" type="button"  id="add-user-Btn" class="btn btn-icon download tablebutton  btn-secondary mr-0">\n' +
+                        ' دانلود \n' +
+                        ' </button>'
                 }
+
             },
+
+
+            {
+                title: "",
+                width: "10%",
+                'className': 'outBox-control',
+                "render": function (data, type, row, meta) {
+
+                    return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon reset-traffic tablebutton  btn-primary mr-0">\n' +
+                        ' ریست  \n' +
+                        ' </button>'
+                }
+
+            },
+
+            {
+                title: "",
+                width: "10%",
+                'className': 'outBox-control',
+                "render": function (data, type, row, meta) {
+
+                    return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon tablebutton  btn-danger mr-0">\n' +
+                        ' خذف \n' +
+                        ' </button>'
+                }
+
+            }
+
+
         ],
 
 
@@ -182,16 +234,17 @@ $(document).ready(function () {
     // clientsTable.ajax.url( '/api/v1/user/d4e81806-575e-47cf-b645-b22082ada0f9/enable-client' ).load();
 
 
-    $('#clientListTable tbody').on('click', 'td.outBox-control button.btn-success', function () {
+    $('#clientListTable tbody').on('click', 'td.outBox-control button.charge', function () {
         var tr = $(this).closest('tr');
         var row = clientsTable.row(tr);
-        var username = row.data().username;
+        var username = row.data().clientId;
 
         // Show modal
         $("#inlineForm").css("display", "block");
 
         // Set hidden input variable value
         $("#username").val(username);
+        $("#trafficId").val("");
 
         // Handle the close button functionality
         // $(".close").click(function() {
@@ -199,6 +252,39 @@ $(document).ready(function () {
         // });
 
     });
+
+
+
+    $('#clientListTable tbody').on('click', 'td.outBox-control button.charge2', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable1.row(tr);
+        var trafficId = row.data().id;
+        var capacity = row.data().capacity;
+        var expirationDate = row.data().expirationDate;
+
+        $("#capacity").val(capacity);
+        $("#expire-date").val(expirationDate);
+        $("#trafficId").val(trafficId);
+
+
+
+
+
+        // Show modal
+        $("#inlineForm").css("display", "block");
+
+        // Set hidden input variable value
+        // $("#username").val(username);
+
+        // Handle the close button functionality
+        // $(".close").click(function() {
+        //     $("#inlineForm").css("display", "none");
+        // });
+
+    });
+    // --------------------------------------
+
+
 
     clientsTable.on('click', 'td.dt-control', function (e) {
         let tr = e.target.closest('tr');
@@ -216,6 +302,7 @@ $(document).ready(function () {
 
     $("#add-traffic-form").submit(function (event) {
         // Get values from input fields
+        var id =  $('#trafficId').val();
         var username = $('#username').val();
         var capacity = $('#capacity').val();
         var expirationDate = $('#expire-date').val();
@@ -223,6 +310,7 @@ $(document).ready(function () {
 
         // Create data object to be sent in POST request
         var postData = {
+            id: id,
             username: username,
             capacity: capacity,
             expirationDate: expirationDate,
@@ -236,12 +324,13 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(postData),
             success: function (response, textStatus, xhr) {
+                $('#trafficId').val("");
                 $("#inlineForm").hide();
                 clientsTable.ajax.reload();
 
             },
             error: function (xhr, status, error) {
-
+                $('#trafficId').val("");
             }
 
         });
@@ -257,13 +346,13 @@ $(document).ready(function () {
 
     /*------------------------------------------------ disable client and reset traffic ----------------------*/
 
-    clientsTable.on('click', 'td.outBox-control a.deactive', function () {
+    clientsTable.on('click', 'td.outBox-control button.deactive', function () {
         var tr = $(this).closest('tr');
         var row = clientsTable.row(tr);
-        var username = row.data().username;
+        var clientId = row.data().clientId;
 
         $.ajax({
-            url: '/api/v1/user/' + username + '/disable-client',
+            url: '/api/v1/user/' + clientId + '/disable-client',
             type: 'POST',
             contentType: 'application/json',
             // data: JSON.stringify(postData),
@@ -278,13 +367,13 @@ $(document).ready(function () {
     });
 
 
-    clientsTable.on('click', 'td.outBox-control a.activate', function () {
+    clientsTable.on('click', 'td.outBox-control button.activate', function () {
         var tr = $(this).closest('tr');
         var row = clientsTable.row(tr);
-        var username = row.data().username;
+        var clientId = row.data().clientId;
 
         $.ajax({
-            url: '/api/v1/user/' + username + '/enable-client',
+            url: '/api/v1/user/' + clientId + '/enable-client',
             type: 'POST',
             contentType: 'application/json',
             // data: JSON.stringify(postData),
@@ -299,13 +388,18 @@ $(document).ready(function () {
     });
 
 
-    clientsTable.on('click', 'td.outBox-control a.reset-traffic', function () {
+
+
+
+
+
+    clientsTable.on('click', 'td.outBox-control button.reset-traffic', function () {
         var tr = $(this).closest('tr');
         var row = clientsTable.row(tr);
-        var username = row.data().username;
+        var clientId = row.data().clientId;
 
         $.ajax({
-            url: '/api/v1/user/' + username + '/client/rest-wg-transfer',
+            url: '/api/v1/user/' + clientId + '/client/rest-wg-transfer',
             type: 'POST',
             contentType: 'application/json',
             // data: JSON.stringify(postData),
@@ -334,7 +428,39 @@ $(document).ready(function () {
 
 
 
+
+
+    clientsTable.on('click', 'td.outBox-control button.download', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable.row(tr);
+        var clientId = row.data().clientId;
+        var username = row.data().username;
+
+        $.ajax({
+            url: '/api/v1/client/'+ clientId +'/configs',
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // Treat the response as a binary blob
+            },
+            success: function (data) {
+                const url = window.URL.createObjectURL(data);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = username + '.zip'; // Specify the desired file name
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            },
+            error: function (error) {
+                console.error('Error fetching the zip file:', error);
+            }
+
+        });
+
+    });
+
 });
+
 
 
 
@@ -368,7 +494,7 @@ function format(d) {
         '\n' +
         '\n' +
         '        ajax: {\n' +
-        '            url: \'/api/v1/user/' + d.username + '/traffics\',\n' +
+        '            url: \'/api/v1/user/' + d.clientId + '/traffics\',\n' +
         '            dataSrc: \'\'\n' +
         '        },\n' +
 
@@ -387,8 +513,8 @@ function format(d) {
         '            //\n' +
         '            // },\n' +
 
-        '            {data: "capacity", title: "ظرفیت", "width": "15%"},\n' +
-        '            {data: "expirationDate", title: "تاریخ انقضا", "width": "15%"},\n' +
+        '            {data: "capacityView", title: "ظرفیت", "width": "15%"},\n' +
+        '            {data: "expirationDateView", title: "تاریخ انقضا", "width": "15%"},\n' +
         '            {data: "transferRx", title: "حجم آپلود", "width": "15%"},\n' +
         '            {data: "transferTx", title: "حجم دانلود", "width": "15%"},\n' +
         '            {data: "createAt", title: "تاریخ ایجاد", "width": "15%"},\n' +
@@ -425,8 +551,9 @@ function format(d) {
         '                title: "",\n' +
         '                width: "10%",\n' +
         '                data: "clientId",\n' +
+        '                className: "outBox-control",\n' +
         '                "render": function (data, type, row, meta) {\n' +
-        '                    return \'<button class="btn btn-sm icon btn-danger"><i class="bi bi-x"></i></button>\';\n' +
+        '                    return \'<button type="button" id="add-user-Btn" class="btn btn-icon tablebutton  btn-success charge2 mr-0" ><i class="bi bi-x"></i></button>\';\n' +
         '                }\n' +
         '            }\n' +
         '        ],\n' +
@@ -508,6 +635,12 @@ function format(d) {
     //     '</dl>'
     // );
 }
+
+
+
+// ------------------------ new -------------------------
+
+
 
 //
 // var myCustomParams = {};

@@ -112,7 +112,7 @@ public class WgProxyServiceImpl implements WgProxyService {
     @Override
     public void disableClient(String clientId) {
 
-       String sessionId = auth();
+        String sessionId = auth();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cookie", sessionId);
         HttpEntity httpEntity = new HttpEntity<>(headers);
@@ -137,6 +137,48 @@ public class WgProxyServiceImpl implements WgProxyService {
     }
 
 
+    @Override
+    public byte[] getConfigFile(String clientId) {
+        String sessionId = auth();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", sessionId);
+        HttpEntity httpEntity = new HttpEntity<>(headers);
+
+
+        StringBuilder path = new StringBuilder();
+        path.append(CLIENT_PATH);
+        path.append("/");
+        path.append(clientId);
+        path.append("/configuration");
+
+        String uri = generateURI(host, port, path.toString());
+        ResponseEntity<String> redirectHeaders = restTemplate.exchange(uri, HttpMethod.GET ,httpEntity, String.class);
+        String redirectUri = redirectHeaders.getHeaders().get("Location").get(0);
+        ResponseEntity<byte[]> response  = restTemplate.exchange(redirectUri, HttpMethod.GET ,httpEntity, byte[].class);
+        return response.getBody();
+
+    }
+
+    @Override
+    public byte[] getQRCodeFile(String clientId) {
+        String sessionId = auth();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", sessionId);
+        HttpEntity httpEntity = new HttpEntity<>(headers);
+
+
+        StringBuilder path = new StringBuilder();
+        path.append(CLIENT_PATH);
+        path.append("/");
+        path.append(clientId);
+        path.append("/qrcode.svg");
+
+        String uri = generateURI(host, port, path.toString());
+        ResponseEntity<String> redirectHeaders = restTemplate.exchange(uri, HttpMethod.GET ,httpEntity, String.class);
+        String redirectUri = redirectHeaders.getHeaders().get("Location").get(0);
+        ResponseEntity<String> result = restTemplate.exchange(redirectUri, HttpMethod.GET ,httpEntity, String.class);
+        return result.getBody().getBytes();
+    }
 
     private String generateURI(String host, String port, String url) {
         return "http://st.mrsduck.store".concat(url);

@@ -1,5 +1,8 @@
 package com.panel.wg.user.domain.entities;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -9,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(uniqueConstraints=@UniqueConstraint(columnNames="apiKey"))
 public class User {
 
     private Long id;

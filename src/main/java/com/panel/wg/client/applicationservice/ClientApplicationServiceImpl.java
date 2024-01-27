@@ -23,12 +23,14 @@ import com.panel.wg.client.externalservice.WgProxyService;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
 import com.panel.wg.common.domain.tools.validators.Validator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -37,8 +39,9 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     private final DisableClientHandler disableClientHandler;
     private final EnableClientHandler enableClientHandler;
     private final ResetClientWgTransferHandler resetClientWgTransferHandler;
-
     private final TrafficJpaRepository trafficJpaRepository;
+    private final WgProxyService wgProxyService;
+
 
     @Override
     public CreateClientDto createClient(CreateClientCommand command) {
@@ -47,20 +50,16 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
 
     @Transactional
     @Override
-    public void disableClient(String username) {
-        Client client = clientRepository.findClientByUsername(username)
-                .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NOT_EXIST));
+    public void disableClient(String clientId) {
 
-        disableClientHandler.accept(new DisableClientCommand(client.getClientId()));
+        disableClientHandler.accept(new DisableClientCommand(clientId));
 
     }
 
     @Transactional
     @Override
-    public void enableClient(String username) {
-        Client client = clientRepository.findClientByUsername(username)
-                .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NOT_EXIST));
-        enableClientHandler.accept(new EnableClientCommand(client.getClientId()));
+    public void enableClient(String clientId) {
+        enableClientHandler.accept(new EnableClientCommand(clientId));
 
     }
 
@@ -76,8 +75,8 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     }
 
     @Override
-    public void resetClientsWgTransfer(String username) {
-        Client client = clientRepository.findClientByUsername(username)
+    public void resetClientsWgTransfer(String clientId) {
+        Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NOT_EXIST));
 
         resetClientWgTransferHandler.handle(client.getClientId());
@@ -97,27 +96,34 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     @Transactional
     @Override
     public void addTraffic(CreateTrafficCommand command) {
-
-        Client client = clientRepository.findClientByUsername(command.username())
-                .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NOT_EXIST));
-
         PersianDate persianDate = PersianDate.parse(command.expirationDate(), Validator.DATE_TIME_FORMATTER);
-        Traffic traffic = Traffic.builder()
-                .status(TrafficStatus.CREATED)
-                .capacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
-                .tempCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
-                .expirationDate(persianDate.toGregorian())
-                .createAt(LocalDateTime.now())
-                .build();
+        if (command.id() == null) {
+            Client client = clientRepository.findById(command.username())
+                    .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NOT_EXIST));
 
-        client.addTraffic(traffic);
-        clientRepository.add(client);
+            Traffic traffic = Traffic.builder()
+                    .status(TrafficStatus.CREATED)
+                    .capacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
+                    .tempCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
+                    .expirationDate(persianDate.toGregorian())
+                    .createAt(LocalDateTime.now())
+                    .build();
+
+            client.addTraffic(traffic);
+            clientRepository.add(client);
+        } else {
+            TrafficEntity traffic = trafficJpaRepository.findById(command.id()).get();
+            traffic.setCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l);
+            traffic.setTempCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l);
+            traffic.setExpirationDate(persianDate.toGregorian());
+            trafficJpaRepository.save(traffic);
+        }
     }
 
     @Transactional
     @Override
-    public List<TrafficDto> getAllTraffics(String username) {
-        Client client = clientRepository.findClientByUsername(username)
+    public List<TrafficDto> getAllTraffics(String clientId) {
+        Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NOT_EXIST));
         return client.getTrafficList()
                 .stream()
@@ -129,9 +135,19 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     @Override
     public void stop() {
         List<TrafficEntity> trafficEntitiesByStatus = trafficJpaRepository.findTrafficEntitiesByStatus(TrafficStatus.ACTIVE);
-        for(TrafficEntity traffic : trafficEntitiesByStatus) {
+        for (TrafficEntity traffic : trafficEntitiesByStatus) {
             traffic.setTempCapacity(traffic.getCapacity() - traffic.getTransferTx());
             trafficJpaRepository.save(traffic);
         }
+    }
+
+    @Override
+    public byte[] getConfigFile(String clientId) {
+        return wgProxyService.getConfigFile(clientId);
+    }
+
+    @Override
+    public byte[] getQRCodeFile(String clientId) {
+        return wgProxyService.getQRCodeFile(clientId);
     }
 }

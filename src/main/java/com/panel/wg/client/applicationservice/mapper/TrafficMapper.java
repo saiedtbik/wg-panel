@@ -52,8 +52,11 @@ public class TrafficMapper {
         }
 
         TrafficDto dto = TrafficDto.builder()
-                .capacity(traffic.getCapacity() == null ? null : " (GB) " + BigDecimal.valueOf(traffic.getCapacity()).divide(new BigDecimal("1000000000")))
-                .expirationDate(PersianDate.fromGregorian(traffic.getExpirationDate()).format(Validator.DATE_TIME_FORMATTER_With_LINE))
+                .id(traffic.getId())
+                .capacity(BigDecimal.valueOf(traffic.getCapacity()).divide(new BigDecimal("1000000000")).toString())
+                .capacityView(traffic.getCapacity() == null ? null : " (GB) " + BigDecimal.valueOf(traffic.getCapacity()).divide(new BigDecimal("1000000000")))
+                .expirationDateView(PersianDate.fromGregorian(traffic.getExpirationDate()).format(Validator.DATE_TIME_FORMATTER_With_LINE))
+                .expirationDate(PersianDate.fromGregorian(traffic.getExpirationDate()).format(Validator.DATE_TIME_FORMATTER))
                 .status(traffic.getStatus())
                 .createAt(PersianDate.fromGregorian(traffic.getCreateAt().toLocalDate()).format(Validator.DATE_TIME_FORMATTER_With_LINE))
                 .transferRx(traffic.getTransferRx() == null ? null : " (GB) " +BigDecimal.valueOf(traffic.getTransferRx()).divide(new BigDecimal("1000000000")))

@@ -6,6 +6,9 @@ import lombok.Builder;
 
 @Builder
 public record CreateTrafficCommand(
+
+        Long id,
+
         @NotNull
         @NotBlank
         String username,

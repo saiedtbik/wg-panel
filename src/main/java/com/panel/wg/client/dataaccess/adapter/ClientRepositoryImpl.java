@@ -70,4 +70,10 @@ public class ClientRepositoryImpl implements ClientRepository {
         }
         return Optional.ofNullable(ClientDataMapper.toClient(clientUserInfo.get()));
     }
+
+    @Override
+    public Optional<Client> findById(String clientId) {
+        return clientJpaRepository.findById(clientId)
+                .map(e -> ClientDataMapper.toClient(e));
+    }
 }

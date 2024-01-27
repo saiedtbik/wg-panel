@@ -23,6 +23,7 @@ import com.panel.wg.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -44,18 +45,18 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 .orElseThrow(() -> new BusinessRuleViolationException(UserError.USER_NOT_FOUND));
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public UserDto createUser(CreateUserCommand command) {
         if (userExistByApiKey(command.username())) {
             throw new BusinessRuleViolationException(UserError.USER_ALREADY_EXIST);
         }
-        if(!userPassAndRePassEqual(command)) {
-            throw  new BusinessRuleViolationException(UserError.USER_PASS_REPASS_NOT_EQUAL);
-        }
+//        if(!userPassAndRePassEqual(command)) {
+//            throw  new BusinessRuleViolationException(UserError.USER_PASS_REPASS_NOT_EQUAL);
+//        }
         User user = User.builder()
                 .apiKey(command.username())
-                .secretKey(passwordEncoder.encode(command.password()))
-                .fullName(command.firstName() + " " + command.lastName())
+                .secretKey(passwordEncoder.encode("123456"))
+                .fullName(command.username())
                 .role(Role.CLIENT_USER)
                 .createOn(LocalDateTime.now())
                 .mobileNum(command.mobileNumber())
@@ -65,7 +66,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         UserEntity userEntity = userRepository.save(UserDataMapper.toUserEntity(user));
 
         CreateClientDto clientDto = createClientHandler.apply(CreateClientCommand.builder()
-                .clientName(user.getFullName())
+                .clientName(command.username())
                 .userId(userEntity.getId())
                 .clientStatus(ClientStatus.DISABLED)
                 .build());
@@ -133,7 +134,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
             }
 
             User user = User.builder()
-                    .apiKey(StringUtility.random(7))
+                    .apiKey(clientModel.getName())
                     .secretKey(passwordEncoder.encode("123456"))
                     .fullName(clientModel.getName())
                     .role(Role.CLIENT_USER)

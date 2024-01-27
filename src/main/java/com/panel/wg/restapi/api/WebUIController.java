@@ -33,6 +33,11 @@ public class WebUIController {
     }
 
 
+    @GetMapping("/load-config")
+    public String loadConfig() {
+        return "add-configuration-page";
+    }
+
     @GetMapping("/application-email")
     public String applicationEmail() {
         return "application-email";

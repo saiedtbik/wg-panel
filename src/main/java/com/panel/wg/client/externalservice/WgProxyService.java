@@ -16,4 +16,8 @@ public interface WgProxyService {
     void enableClient(String clientId);
 
     void disableClient(String clientId);
+
+    byte[] getConfigFile(String clientId);
+
+    byte[] getQRCodeFile(String clientId);
 }

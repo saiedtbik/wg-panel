@@ -7,23 +7,23 @@ import lombok.Builder;
 
 @Builder
 public record CreateUserCommand(
-        @NotNull()
-        @NotBlank()
+//        @NotNull()
+//        @NotBlank()
         String firstName,
 
-        @NotNull()
-        @NotBlank()
+//        @NotNull()
+//        @NotBlank()
         String lastName,
 
         @NotNull()
         @NotBlank()
         String username,
-        @NotNull()
-        @NotBlank()
+//        @NotNull()
+//        @NotBlank()
         String password,
 
-        @NotNull()
-        @NotBlank()
+//        @NotNull()
+//        @NotBlank()
         String repassword,
 
         String email,

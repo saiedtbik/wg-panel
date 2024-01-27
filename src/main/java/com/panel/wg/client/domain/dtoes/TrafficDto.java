@@ -8,8 +8,12 @@ import java.time.LocalDateTime;
 
 @Builder
 public record TrafficDto(
+    Long id,
     String capacity,
     String expirationDate,
+    String expirationDateView,
+    String capacityView,
+
     String transferRx,
     String transferTx,
     TrafficStatus status,

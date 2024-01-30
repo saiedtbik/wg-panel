@@ -4,7 +4,9 @@ package com.panel.wg.auth.service;
 import com.panel.wg.auth.command.AuthenticateCommand;
 import com.panel.wg.auth.dto.AuthUser;
 import com.panel.wg.auth.dto.AuthenticationResponse;
+import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
 import com.panel.wg.common.domain.tools.utilities.StringUtility;
+import com.panel.wg.user.domain.exceptions.UserError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,12 +28,16 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticateCommand authenticateCommand) {
         // Authenticate username and password. If It isn't authenticated throw AuthenticationException
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticateCommand.username(),
-                        authenticateCommand.password()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            authenticateCommand.username(),
+                            authenticateCommand.password()
+                    )
+            );
+        }catch (Exception e) {
+            throw new BusinessRuleViolationException(UserError.USERNAME_OR_PASS_INCORRECT);
+        }
 
         var user = (AuthUser) userDetailsService.loadUserByUsername(authenticateCommand.username());
         Map<String, Object> extraClaims = new HashMap<>();

@@ -20,4 +20,5 @@ public interface UserApplicationService {
 
     void creatAllUserFromWgClients();
 
+    void save(User admin);
 }

@@ -14,5 +14,9 @@ public record CreateClientWithModelCommand(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         LocalDateTime latestHandshakeAt,
-        Long userId) {
+        Long userId,
+        Long transferRx,
+        Long transferTx
+
+        ) {
 }

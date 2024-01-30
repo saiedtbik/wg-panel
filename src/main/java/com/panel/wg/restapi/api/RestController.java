@@ -5,6 +5,7 @@ import com.panel.wg.client.applicationservice.commands.CreateTrafficCommand;
 import com.panel.wg.client.applicationservice.data.ClientRepository;
 import com.panel.wg.client.dataaccess.entities.ConfigEntity;
 import com.panel.wg.client.dataaccess.repositories.ConfigJpaRepository;
+import com.panel.wg.client.dataaccess.repositories.TrafficJpaRepository;
 import com.panel.wg.client.domain.dtoes.TrafficDto;
 import com.panel.wg.client.domain.entities.Client;
 import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
@@ -47,6 +48,7 @@ public class RestController extends BaseController {
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final ConfigJpaRepository configJpaRepository;
+    private final TrafficJpaRepository trafficJpaRepository;
 
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/user")
@@ -134,14 +136,31 @@ public class RestController extends BaseController {
 
 
     @SecurityRequirement(name = "bearerAuth")
-    @PostMapping("/add-endpoint")
-    public ResponseEntity addConfig(@RequestBody String config) {
+    @PostMapping("/add-endpoint/{configUrl}")
+    public ResponseEntity addConfig(@PathVariable("configUrl") String configUrl) {
         ConfigEntity configEntity = new ConfigEntity();
         configEntity.setId(1L);
-        configEntity.setUrl(config);
+        configEntity.setUrl(configUrl);
         configJpaRepository.save(configEntity);
         return success();
     }
+
+
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping("user/{clientId}")
+    public ResponseEntity<List<UserDto>> deleteClient(@PathVariable("clientId") String clientId) {
+        clientApplicationService.deleteClient(clientId);
+        return success();
+    }
+
+
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping("/traffic/{trafficId}")
+    public ResponseEntity deleteTraffic( @PathVariable("trafficId") Long trafficId) {
+        trafficJpaRepository.deleteById(trafficId);
+        return success();
+    }
+
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/endpoint")

@@ -24,7 +24,12 @@ public enum Role {
                             RESET_CLIENT_WG_TRAFFIC,
                             REST_ALL_CLIENTS_WG_TRAFFIC,
                             GENERATE_USERS_FROM_WG_CLIENTS,
-                            STOP
+                            STOP,
+                            ADD_CONFIG,
+                            DELETE_CLIENT,
+                            DELETE_TRAFFIC,
+                            VIEW_CONFIG,
+                            DOWNLOAD_CONFIG
 
                     )),
     CLIENT_USER(

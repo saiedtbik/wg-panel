@@ -19,4 +19,6 @@ public interface ClientRepository {
     Optional<Client> findClientByUsername(String username);
 
     Optional<Client> findById(String clientId);
+
+    void delete(String clientId);
 }

@@ -1,10 +1,8 @@
 package com.panel.wg.client.applicationservice;
 
 import com.github.mfathi91.time.PersianDate;
-import com.panel.wg.client.applicationservice.commands.CreateClientCommand;
-import com.panel.wg.client.applicationservice.commands.CreateTrafficCommand;
-import com.panel.wg.client.applicationservice.commands.DisableClientCommand;
-import com.panel.wg.client.applicationservice.commands.EnableClientCommand;
+import com.panel.wg.client.applicationservice.commands.*;
+import com.panel.wg.client.applicationservice.commnadHandlers.DeleteClientHandler;
 import com.panel.wg.client.applicationservice.commnadHandlers.DisableClientHandler;
 import com.panel.wg.client.applicationservice.commnadHandlers.EnableClientHandler;
 import com.panel.wg.client.applicationservice.commnadHandlers.ResetClientWgTransferHandler;
@@ -41,6 +39,7 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     private final ResetClientWgTransferHandler resetClientWgTransferHandler;
     private final TrafficJpaRepository trafficJpaRepository;
     private final WgProxyService wgProxyService;
+    private final DeleteClientHandler deleteClientHandler;
 
 
     @Override
@@ -51,7 +50,6 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     @Transactional
     @Override
     public void disableClient(String clientId) {
-
         disableClientHandler.accept(new DisableClientCommand(clientId));
 
     }
@@ -62,6 +60,15 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
         enableClientHandler.accept(new EnableClientCommand(clientId));
 
     }
+
+    @Transactional
+    @Override
+    public void deleteClient(String clientId) {
+        deleteClientHandler.accept(new DeleteClientCommand(clientId));
+
+    }
+
+
 
     @Transactional
     @Override
@@ -104,7 +111,8 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
             Traffic traffic = Traffic.builder()
                     .status(TrafficStatus.CREATED)
                     .capacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
-                    .tempCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l)
+                    .tempRx(0L)
+                    .tempTx(0L)
                     .expirationDate(persianDate.toGregorian())
                     .createAt(LocalDateTime.now())
                     .build();
@@ -114,7 +122,8 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
         } else {
             TrafficEntity traffic = trafficJpaRepository.findById(command.id()).get();
             traffic.setCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l);
-            traffic.setTempCapacity(command.capacity() != null ? command.capacity() * 1000000000 : 100000000000l);
+            traffic.setTempTx(0L);
+            traffic.setTempRx(0L);
             traffic.setExpirationDate(persianDate.toGregorian());
             trafficJpaRepository.save(traffic);
         }
@@ -128,7 +137,7 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
         return client.getTrafficList()
                 .stream()
                 .map(t -> TrafficMapper.toDto(t))
-                .sorted(Comparator.comparing(t -> t.createAt()))
+                .sorted(Comparator.comparing(TrafficDto::expirationDate))
                 .toList();
     }
 
@@ -136,7 +145,8 @@ public class ClientApplicationServiceImpl implements ClientApplicationService {
     public void stop() {
         List<TrafficEntity> trafficEntitiesByStatus = trafficJpaRepository.findTrafficEntitiesByStatus(TrafficStatus.ACTIVE);
         for (TrafficEntity traffic : trafficEntitiesByStatus) {
-            traffic.setTempCapacity(traffic.getCapacity() - traffic.getTransferTx());
+            traffic.setTempRx(traffic.getTransferRx());
+            traffic.setTempTx(traffic.getTransferTx());
             trafficJpaRepository.save(traffic);
         }
     }

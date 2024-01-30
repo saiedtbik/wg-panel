@@ -12,6 +12,8 @@ public enum ClientError implements ApplicationError {
     CLIENT_NOT_EXIST("client.not.exist"),
     CLIENT_NOT_ACTIVE("client.not.active"),
 
+    CLIENT_WG_EXIST("client.wg.exist"),
+
     ;
 
     private String key;

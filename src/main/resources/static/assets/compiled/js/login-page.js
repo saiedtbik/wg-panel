@@ -1,22 +1,27 @@
 $(document).ready(function () {
+
     $("form").submit(function (event) {
+
+        var username = $('#username').val();
+        var password = $('#password').val();
+
+
+        // Create data object to be sent in POST request
+        var postData = {
+            username: username,
+            password: password,
+        };
 
         // AJAX POST request
 
         $.ajax({
-            url:'/api/v1/user/create-from-wg-clients',
-            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
+            url:'/api/v1/auth/authenticate',
             type:'POST',
             contentType:'application/json',
-            // data: JSON.stringify(postData),
+            data: JSON.stringify(postData),
             success:function(response, textStatus, xhr) {
-                $('#success-msg').text("پیغام‌: کاربران با موفقیت ایجاد شدند");
-                $('#success-msg').show();
-
-                setTimeout(function() {
-                    $('#success-msg').hide();
-
-                }, 4000);
+                localStorage.setItem("token", response.access_token)
+                window.location.assign("/view-traffics");
 
             },
             error: function(xhr, status, error) {
@@ -30,13 +35,5 @@ $(document).ready(function () {
 
         });
         event.preventDefault();
-    });
-});
-
-
-$(document).ready(function() {
-    $("#exit").click(function(){
-        localStorage.removeItem("token");
-        window.location.assign("/login");
     });
 });

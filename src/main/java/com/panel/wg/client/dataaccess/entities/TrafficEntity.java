@@ -18,7 +18,9 @@ public class TrafficEntity {
 
     Long capacity;
 
-    Long tempCapacity;
+    Long tempRx;
+
+    Long tempTx;
 
     LocalDate expirationDate;
 

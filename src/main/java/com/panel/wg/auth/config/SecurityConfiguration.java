@@ -12,9 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import static com.panel.wg.user.domain.entities.Authority.*;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 
 @Configuration
@@ -32,7 +32,12 @@ public class SecurityConfiguration {
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
-                            "/**",
+                                    "/login",
+                                    "/view-traffics",
+                                    "/add-user",
+                                    "/view-users",
+                                    "/load-config",
+                                    "/load-user",
                                     "/api/v1/auth/**",
                                     "/v2/api-docs",
                                     "/v3/api-docs",
@@ -44,7 +49,8 @@ public class SecurityConfiguration {
                                     "/swagger-ui/**",
                                     "/webjars/**",
                                     "/swagger-ui.html",
-                                    "/swagger-ui/index.html"
+                                    "/swagger-ui/index.html",
+                                    "/assets/**"
                             )
                             .permitAll()
 
@@ -59,7 +65,14 @@ public class SecurityConfiguration {
                             .requestMatchers(POST, "/api/v1/clients/rest-wg-transfer").hasAnyAuthority(REST_ALL_CLIENTS_WG_TRAFFIC.name())
                             .requestMatchers(POST, "/api/v1/user/*/client/rest-wg-transfer").hasAnyAuthority(RESET_CLIENT_WG_TRAFFIC.name())
                             .requestMatchers(POST, "/api/v1/clients/stop").hasAnyAuthority(STOP.name())
-                            .requestMatchers(POST, "/api/v1/user/create-from-wg-clients").hasAnyAuthority(GENERATE_USERS_FROM_WG_CLIENTS.name());
+                            .requestMatchers(POST, "/api/v1/user/create-from-wg-clients").hasAnyAuthority(GENERATE_USERS_FROM_WG_CLIENTS.name())
+                            .requestMatchers(POST, "/api/v1/add-endpoint/*").hasAnyAuthority(ADD_CONFIG.name())
+                            .requestMatchers(DELETE, "/api/v1/user/*").hasAnyAuthority(DELETE_CLIENT.name())
+                            .requestMatchers(DELETE, "/api/v1/traffic/*").hasAnyAuthority(DELETE_TRAFFIC.name())
+                            .requestMatchers(GET, "/api/v1/endpoint").hasAnyAuthority(VIEW_CONFIG.name())
+                            .requestMatchers(GET, "/api/v1/client/*/configs").hasAnyAuthority(DOWNLOAD_CONFIG.name())
+
+                    ;
 
                     ;
 

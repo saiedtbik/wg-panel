@@ -21,6 +21,8 @@ $(document).ready(function () {
 
         ajax: {
             url: '/api/v1/user/all',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
+
             dataSrc: ''
         },
         columns: [
@@ -150,6 +152,14 @@ $(document).ready(function () {
     });
 
 
+});
+
+
+$(document).ready(function() {
+    $("#exit").click(function(){
+        localStorage.removeItem("token");
+        window.location.assign("/login");
+    });
 });
 
 

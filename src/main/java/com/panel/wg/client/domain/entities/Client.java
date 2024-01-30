@@ -32,8 +32,14 @@ public class Client {
     List<Traffic> trafficList = new ArrayList<>();
     User user;
 
+
     public void disableClient() {
         status = ClientStatus.DISABLED;
+        if (getCurrentTraffic().isPresent()) {
+            getCurrentTraffic().get().tempRx = getCurrentTraffic().get().transferRx;
+            getCurrentTraffic().get().tempTx = getCurrentTraffic().get().transferTx;
+            getCurrentTraffic().get().setStatus(TrafficStatus.CREATED);
+        }
     }
 
     public void enableClient() {
@@ -41,7 +47,10 @@ public class Client {
     }
 
     public void addTraffic(Traffic traffic) {
+        if (trafficList == null)
+            trafficList = new ArrayList<>();
         trafficList.add(traffic);
+
     }
 
     public boolean changeTrafficIfNeeded() {
@@ -61,7 +70,7 @@ public class Client {
 
     private void changeCurrentTrafficFor(TrafficStatus trafficStatus) {
         Optional<Traffic> currentTraffic = getCurrentTraffic();
-        if(currentTraffic.isPresent()) {
+        if (currentTraffic.isPresent()) {
             currentTraffic.get().setStatus(trafficStatus);
             Traffic traffic = trafficList.stream()
                     .filter(t -> t.status.equals(TrafficStatus.CREATED) && t != currentTraffic.get())
@@ -85,16 +94,20 @@ public class Client {
     public void updateCurrentTrafficTransfer(Long updatedTransferRx, Long updatedTransferTx) {
         Optional<Traffic> currentTraffic = getCurrentTraffic();
         if (currentTraffic.isPresent()) {
-            currentTraffic.get().transferTx = updatedTransferTx;
-            currentTraffic.get().transferRx = updatedTransferRx;
+            Long tRx = currentTraffic.get().tempRx == null ? 0 : currentTraffic.get().tempRx;
+            Long tTx = currentTraffic.get().tempTx == null ? 0 : currentTraffic.get().tempTx;
+            currentTraffic.get().transferTx = updatedTransferTx + tTx;
+            currentTraffic.get().transferRx = updatedTransferRx + tRx;
         }
     }
 
     public void setExpiredOutDatedTraffic() {
-        trafficList.stream()
-                .filter(t -> t.status != TrafficStatus.EXPIRED && t.status != TrafficStatus.NO_CAPACITY)
-                .filter(t -> t.expirationDate.isBefore(LocalDate.now()))
-                .forEach(t -> t.status = TrafficStatus.EXPIRED);
+        for (Traffic t : trafficList) {
+            if ((t.status != TrafficStatus.EXPIRED && t.status != TrafficStatus.NO_CAPACITY) &&
+                    (t.expirationDate.isBefore(LocalDate.now()))) {
+                t.setStatus(TrafficStatus.EXPIRED);
+            }
+        }
     }
 
     public Optional<Traffic> getCurrentTraffic() {

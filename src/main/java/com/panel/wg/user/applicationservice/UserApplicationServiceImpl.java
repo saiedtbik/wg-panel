@@ -21,12 +21,15 @@ import com.panel.wg.user.domain.exceptions.UserError;
 import com.panel.wg.user.repository.UserEntity;
 import com.panel.wg.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RequiredArgsConstructor
 @Service
@@ -45,14 +48,15 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 .orElseThrow(() -> new BusinessRuleViolationException(UserError.USER_NOT_FOUND));
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public UserDto createUser(CreateUserCommand command) {
+
+
         if (userExistByApiKey(command.username())) {
             throw new BusinessRuleViolationException(UserError.USER_ALREADY_EXIST);
         }
-//        if(!userPassAndRePassEqual(command)) {
-//            throw  new BusinessRuleViolationException(UserError.USER_PASS_REPASS_NOT_EQUAL);
-//        }
+
+
         User user = User.builder()
                 .apiKey(command.username())
                 .secretKey(passwordEncoder.encode("123456"))
@@ -63,12 +67,20 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 .email(command.email())
                 .enabled(true)
                 .build();
-        UserEntity userEntity = userRepository.save(UserDataMapper.toUserEntity(user));
+
+        UserEntity userEntity;
+
+        try {
+            userEntity = userRepository.save(UserDataMapper.toUserEntity(user));
+            userRepository.flush();
+        } catch (Exception e) {
+            throw new BusinessRuleViolationException(UserError.USER_ALREADY_EXIST);
+        }
 
         CreateClientDto clientDto = createClientHandler.apply(CreateClientCommand.builder()
                 .clientName(command.username())
                 .userId(userEntity.getId())
-                .clientStatus(ClientStatus.DISABLED)
+                .clientStatus(ClientStatus.ACTIVE)
                 .build());
 
 
@@ -82,7 +94,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     private boolean userPassAndRePassEqual(CreateUserCommand command) {
-     return command.password().equals(command.repassword());
+        return command.password().equals(command.repassword());
     }
 
     @Transactional
@@ -133,6 +145,10 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 continue;
             }
 
+            if (userRepository.findByApiKey(clientModel.getName()).isPresent()) {
+                continue;
+
+            }
             User user = User.builder()
                     .apiKey(clientModel.getName())
                     .secretKey(passwordEncoder.encode("123456"))
@@ -141,7 +157,9 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                     .createOn(LocalDateTime.now())
                     .enabled(true)
                     .build();
+
             UserEntity userEntity = userRepository.save(UserDataMapper.toUserEntity(user));
+            userRepository.flush();
 
 
             createClientWithModelHandler.apply(CreateClientWithModelCommand.builder()
@@ -154,13 +172,21 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                     .latestHandshakeAt(clientModel.getLatestHandshakeAt())
                     .userId(userEntity.getId())
                     .updatedAt(clientModel.getUpdatedAt())
-                    .enabled(false)
+                    .enabled(clientModel.isEnabled())
+                    .transferRx(clientModel.getTransferRx())
+                    .transferTx(clientModel.getTransferTx())
                     .build());
         }
 
     }
 
     private boolean userExistByClientId(String clientId) {
-      return userRepository.existsByClientId(clientId).isPresent();
+        return userRepository.existsByClientId(clientId).isPresent();
+    }
+
+    @Override
+    public void save(User admin) {
+        UserEntity userEntity = UserDataMapper.toUserEntity(admin);
+        userRepository.save(userEntity);
     }
 }

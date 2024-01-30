@@ -12,9 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WebUIController {
 
-    @GetMapping(value = {"/", "/index", "/add-user"})
-    public String indexMain(Model model) {
+    @GetMapping(value = { "/add-user"})
+    public String addUser(Model model) {
         return "add-user-page";
+    }
+    @GetMapping(value = {"/login"})
+    public String indexMain(Model model) {
+        return "auth-login.html";
     }
 
     @GetMapping("/view-users")

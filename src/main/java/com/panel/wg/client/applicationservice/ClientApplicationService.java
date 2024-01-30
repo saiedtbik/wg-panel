@@ -12,6 +12,7 @@ public interface ClientApplicationService {
     CreateClientDto createClient(CreateClientCommand command);
     void disableClient(String clientId);
     void enableClient(String clientId);
+    void deleteClient(String clientId);
     void resetClientsWgTransfer(String clientId);
     void addTraffic(CreateTrafficCommand command);
 

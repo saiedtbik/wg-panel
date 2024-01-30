@@ -25,7 +25,15 @@ public enum Authority {
     REST_ALL_CLIENTS_WG_TRAFFIC("reset_client_wg_traffic"),
     GENERATE_USERS_FROM_WG_CLIENTS("generate_users_from_wg_clients"),
 
-    STOP("stop")
+    STOP("stop"),
+
+    ADD_CONFIG("/api/v1/add-endpoint/*"),
+    DELETE_CLIENT("/api/v1/user/*"),
+    DELETE_TRAFFIC("/api/v1/traffic/*"),
+    VIEW_CONFIG("/api/v1/endpoint"),
+    DOWNLOAD_CONFIG("/api/v1/client/*/configs")
+
+
     ;
     @Getter
     private final String permission;

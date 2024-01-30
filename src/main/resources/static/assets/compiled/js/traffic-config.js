@@ -20,6 +20,7 @@ $(document).ready(function () {
 
         ajax: {
             url: '/api/v1/user/all',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
             dataSrc: ''
         },
         columns: [
@@ -139,26 +140,26 @@ $(document).ready(function () {
             },
 
 
+            // {
+            //     title: "",
+            //     width: "10%",
+            //     'className': 'outBox-control',
+            //     "render": function (data, type, row, meta) {
+            //
+            //         return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon reset-traffic tablebutton  btn-primary mr-0">\n' +
+            //             ' ریست  \n' +
+            //             ' </button>'
+            //     }
+            //
+            // },
+
             {
                 title: "",
                 width: "10%",
                 'className': 'outBox-control',
                 "render": function (data, type, row, meta) {
 
-                    return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon reset-traffic tablebutton  btn-primary mr-0">\n' +
-                        ' ریست  \n' +
-                        ' </button>'
-                }
-
-            },
-
-            {
-                title: "",
-                width: "10%",
-                'className': 'outBox-control',
-                "render": function (data, type, row, meta) {
-
-                    return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon tablebutton  btn-danger mr-0">\n' +
+                    return '  <button id="traffic-btn" type="button" id="delete-user" class="btn btn-icon tablebutton delete-user btn-danger mr-0">\n' +
                         ' خذف \n' +
                         ' </button>'
                 }
@@ -254,7 +255,6 @@ $(document).ready(function () {
     });
 
 
-
     $('#clientListTable tbody').on('click', 'td.outBox-control button.charge2', function () {
         var tr = $(this).closest('tr');
         var row = clientsTable1.row(tr);
@@ -265,9 +265,6 @@ $(document).ready(function () {
         $("#capacity").val(capacity);
         $("#expire-date").val(expirationDate);
         $("#trafficId").val(trafficId);
-
-
-
 
 
         // Show modal
@@ -282,8 +279,31 @@ $(document).ready(function () {
         // });
 
     });
-    // --------------------------------------
 
+    $('#clientListTable tbody').on('click', 'td.outBox-control button.delete2', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable1.row(tr);
+        var trafficId = row.data().id;
+
+        $.ajax({
+            url: '/api/v1/traffic/' + trafficId,
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
+            type: 'DELETE',
+            contentType: 'application/json',
+
+            // data: JSON.stringify(postData),
+            success: function (response, textStatus, xhr) {
+                clientsTable.ajax.reload();
+            },
+            error: function (xhr, status, error) {
+
+            }
+
+        });
+
+
+    });
+    // --------------------------------------
 
 
     clientsTable.on('click', 'td.dt-control', function (e) {
@@ -302,7 +322,7 @@ $(document).ready(function () {
 
     $("#add-traffic-form").submit(function (event) {
         // Get values from input fields
-        var id =  $('#trafficId').val();
+        var id = $('#trafficId').val();
         var username = $('#username').val();
         var capacity = $('#capacity').val();
         var expirationDate = $('#expire-date').val();
@@ -320,6 +340,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: '/api/v1/user/add-traffic',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(postData),
@@ -353,6 +374,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: '/api/v1/user/' + clientId + '/disable-client',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
             type: 'POST',
             contentType: 'application/json',
             // data: JSON.stringify(postData),
@@ -375,6 +397,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/v1/user/' + clientId + '/enable-client',
             type: 'POST',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
             contentType: 'application/json',
             // data: JSON.stringify(postData),
             success: function (response, textStatus, xhr) {
@@ -388,35 +411,36 @@ $(document).ready(function () {
     });
 
 
-
-
-
-
-
-    clientsTable.on('click', 'td.outBox-control button.reset-traffic', function () {
+    clientsTable.on('click', 'td.outBox-control button.delete-user', function () {
         var tr = $(this).closest('tr');
         var row = clientsTable.row(tr);
         var clientId = row.data().clientId;
 
         $.ajax({
-            url: '/api/v1/user/' + clientId + '/client/rest-wg-transfer',
-            type: 'POST',
+            url: '/api/v1/user/' + clientId,
+            type: 'DELETE',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
+
             contentType: 'application/json',
             // data: JSON.stringify(postData),
             success: function (response, textStatus, xhr) {
-                $('#success-msg').text("پیغام‌: ترافیک کاربر با موفقیت ریست شد.");
+                clientsTable.ajax.reload();
+                $('#success-msg').text("پیغام‌:کاربر با موفقیت حذف شد.");
                 $('#success-msg').show();
 
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#success-msg').hide();
 
                 }, 4000);
 
             },
             error: function (xhr, status, error) {
-                $('#failed_msg').text( "پیغام خطا: "  + xhr.responseJSON.message  );
+                if(status == '403') {
+                    window.location.assign("/login");
+                }
+                $('#failed_msg').text("پیغام خطا: " + xhr.responseJSON.message);
                 $('#failed_msg').show();
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#failed_msg').hide();
 
                 }, 4000);
@@ -427,9 +451,6 @@ $(document).ready(function () {
     });
 
 
-
-
-
     clientsTable.on('click', 'td.outBox-control button.download', function () {
         var tr = $(this).closest('tr');
         var row = clientsTable.row(tr);
@@ -437,7 +458,8 @@ $(document).ready(function () {
         var username = row.data().username;
 
         $.ajax({
-            url: '/api/v1/client/'+ clientId +'/configs',
+            url: '/api/v1/client/' + clientId + '/configs',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
             type: 'GET',
             xhrFields: {
                 responseType: 'blob' // Treat the response as a binary blob
@@ -460,8 +482,6 @@ $(document).ready(function () {
     });
 
 });
-
-
 
 
 function format(d) {
@@ -495,6 +515,7 @@ function format(d) {
         '\n' +
         '        ajax: {\n' +
         '            url: \'/api/v1/user/' + d.clientId + '/traffics\',\n' +
+        '            headers: {\'Authorization\': "Bearer " + localStorage.getItem("token")},\n' +
         '            dataSrc: \'\'\n' +
         '        },\n' +
 
@@ -550,10 +571,30 @@ function format(d) {
         '            {\n' +
         '                title: "",\n' +
         '                width: "10%",\n' +
-        '                data: "clientId",\n' +
+        '                data: "status",\n' +
         '                className: "outBox-control",\n' +
         '                "render": function (data, type, row, meta) {\n' +
-        '                    return \'<button type="button" id="add-user-Btn" class="btn btn-icon tablebutton  btn-success charge2 mr-0" ><i class="bi bi-x"></i></button>\';\n' +
+        '                    if (data == "ACTIVE" || data == "CREATED" ) {\n' +
+        '                    return \'<button type="button" id="add-user-Btn" class="btn btn-sm tablebutton  btn-success charge2 mr-0" >ویرایش</button>\';\n' +
+        '                    }\n' +
+        '                    else  {\n' +
+        '                        return \'<span </span>\';\n' +
+        '                    }\n' +
+        '                }\n' +
+        '            },\n' +
+
+        '            {\n' +
+        '                title: "",\n' +
+        '                width: "10%",\n' +
+        '                data: "status",\n' +
+        '                className: "outBox-control",\n' +
+        '                "render": function (data, type, row, meta) {\n' +
+        '                    if (data == "EXPIRED" || data == "CREATED" || data == "NO_CAPACITY") {\n' +
+        '                    return \'<button type="button" id="add-user-Btn" class="btn btn-sm tablebutton  btn-danger delete2 mr-0" >حذف</button>\';\n' +
+        '                    }\n' +
+        '                    else  {\n' +
+        '                        return \'<span </span>\';\n' +
+        '                    }\n' +
         '                }\n' +
         '            }\n' +
         '        ],\n' +
@@ -638,8 +679,16 @@ function format(d) {
 
 
 
-// ------------------------ new -------------------------
 
+
+$(document).ready(function() {
+    $("#exit").click(function(){
+        localStorage.removeItem("token");
+        window.location.assign("/login");
+    });
+});
+
+// ------------------------ new -------------------------
 
 
 //

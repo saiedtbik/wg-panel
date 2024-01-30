@@ -9,11 +9,12 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "t_user")
+@Table(name = "t_user", uniqueConstraints = @UniqueConstraint(columnNames = "api_key"))
 public class UserEntity {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "api_key", unique=true)
     private String apiKey;
     private String secretKey;
     private String fullName;

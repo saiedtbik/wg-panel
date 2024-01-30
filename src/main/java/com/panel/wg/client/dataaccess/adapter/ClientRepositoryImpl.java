@@ -43,6 +43,11 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
+    public void delete(String clientId) {
+       clientJpaRepository.deleteById(clientId);
+    }
+
+    @Override
     public List<Client> findAll() {
         return clientJpaRepository.findAll()
                 .stream().map(clientEntity -> ClientDataMapper.toClient(clientEntity))

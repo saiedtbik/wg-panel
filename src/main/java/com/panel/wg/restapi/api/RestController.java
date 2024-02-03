@@ -1,5 +1,9 @@
 package com.panel.wg.restapi.api;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.panel.wg.client.applicationservice.ClientApplicationService;
 import com.panel.wg.client.applicationservice.commands.CreateTrafficCommand;
 import com.panel.wg.client.applicationservice.data.ClientRepository;
@@ -25,8 +29,11 @@ import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -181,17 +188,20 @@ public class RestController extends BaseController {
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("client/{clientId}/configs")
     @ResponseBody
-    public ResponseEntity<byte[]> getFiles(@PathVariable("clientId") String clientId) throws IOException {
+    public ResponseEntity<byte[]> getFiles(@PathVariable("clientId") String clientId) throws Exception {
 
         Optional<Client> client = clientRepository.find(clientId);
         String clientName = client.get().getClientName();
 
-        byte[] qrCodeResponse = clientApplicationService.getQRCodeFile(clientId);
+//        byte[] qrCodeResponse = clientApplicationService.getQRCodeFile(clientId);
         byte[] configResponse = clientApplicationService.getConfigFile(clientId);
 
         if (configJpaRepository.findById(1L).map(co -> co.getUrl()).isPresent()) {
             configResponse = replaceLastLine(configResponse, configJpaRepository.findById(1L).map(co -> co.getUrl()).get());
         }
+
+
+        byte[] qrCodeResponse = toByteArray(generateQRCodeImage(new String(configResponse, StandardCharsets.UTF_8)), "png");
 
         byte[] zipFile = createZipFile(qrCodeResponse, configResponse);
 
@@ -260,6 +270,24 @@ public class RestController extends BaseController {
 
         // If there's only one line or an empty file, return 0
         return 0;
+    }
+
+    public  BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
+        QRCodeWriter barcodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix =
+                barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 512, 512);
+
+        return MatrixToImageWriter.toBufferedImage(bitMatrix);
+    }
+
+    public static byte[] toByteArray(BufferedImage bi, String format)
+            throws IOException {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bi, format, baos);
+        byte[] bytes = baos.toByteArray();
+        return bytes;
+
     }
 }
 

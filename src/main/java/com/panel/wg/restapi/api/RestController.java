@@ -172,7 +172,7 @@ public class RestController extends BaseController {
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/endpoint")
     public ResponseEntity getConfig() {
-        String url = configJpaRepository.findById(1L).map(c -> c.getUrl()).get();
+        String url = configJpaRepository.findById(1L).map(c -> c.getUrl()).orElse("");
         return success(url);
     }
 

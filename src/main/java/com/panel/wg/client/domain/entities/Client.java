@@ -93,9 +93,16 @@ public class Client {
 
     public void updateCurrentTrafficTransfer(Long updatedTransferRx, Long updatedTransferTx) {
         Optional<Traffic> currentTraffic = getCurrentTraffic();
+
         if (currentTraffic.isPresent()) {
+            if (currentTraffic.get().transferTx > updatedTransferTx || currentTraffic.get().transferRx > updatedTransferRx) {
+                currentTraffic.get().tempTx = currentTraffic.get().getTransferTx();
+                currentTraffic.get().tempRx = currentTraffic.get().getTransferRx();
+            }
+
             Long tRx = currentTraffic.get().tempRx == null ? 0 : currentTraffic.get().tempRx;
             Long tTx = currentTraffic.get().tempTx == null ? 0 : currentTraffic.get().tempTx;
+
             currentTraffic.get().transferTx = updatedTransferTx + tTx;
             currentTraffic.get().transferRx = updatedTransferRx + tRx;
         }

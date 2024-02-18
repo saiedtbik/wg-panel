@@ -1,13 +1,12 @@
 package com.panel.wg.client.domain.entities;
 
 import com.panel.wg.client.domain.valueObjects.TrafficStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

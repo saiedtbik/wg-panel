@@ -146,8 +146,8 @@ $(document).ready(function () {
             //     'className': 'outBox-control',
             //     "render": function (data, type, row, meta) {
             //
-            //         return '  <button id="traffic-btn" type="button" id="add-user-Btn" class="btn btn-icon reset-traffic tablebutton  btn-primary mr-0">\n' +
-            //             ' ریست  \n' +
+            //         return '  <button id="qrcode-btn" type="button" id="add-user-Btn" class="btn btn-icon qrcode tablebutton  btn-primary mr-0">\n' +
+            //             ' QR  \n' +
             //             ' </button>'
             //     }
             //
@@ -279,6 +279,39 @@ $(document).ready(function () {
         // });
 
     });
+
+    clientsTable.on('click', 'td.outBox-control button.qrcode', function () {
+        var tr = $(this).closest('tr');
+        var row = clientsTable.row(tr);
+        var clientId = row.data().clientId;
+
+
+        // Show modal
+        $("#inlineForm2").css("display", "block");
+
+        // Set hidden input variable value
+        // $("#username").val(username);
+
+        // Handle the close button functionality
+        // $(".close").click(function() {
+        //     $("#inlineForm").css("display", "none");
+        // });
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     $('#clientListTable tbody').on('click', 'td.outBox-control button.delete2', function () {
         var tr = $(this).closest('tr');
@@ -416,37 +449,39 @@ $(document).ready(function () {
         var row = clientsTable.row(tr);
         var clientId = row.data().clientId;
 
-        $.ajax({
-            url: '/api/v1/user/' + clientId,
-            type: 'DELETE',
-            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
+        if (confirm('آیااز حذف کاربر از روی سیستم مطمین هستید؟')) {
+            $.ajax({
+                url: '/api/v1/user/' + clientId,
+                type: 'DELETE',
+                headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
 
-            contentType: 'application/json',
-            // data: JSON.stringify(postData),
-            success: function (response, textStatus, xhr) {
-                clientsTable.ajax.reload();
-                $('#success-msg').text("پیغام‌:کاربر با موفقیت حذف شد.");
-                $('#success-msg').show();
+                contentType: 'application/json',
+                // data: JSON.stringify(postData),
+                success: function (response, textStatus, xhr) {
+                    clientsTable.ajax.reload();
+                    $('#success-msg').text("پیغام‌:کاربر با موفقیت حذف شد.");
+                    $('#success-msg').show();
 
-                setTimeout(function () {
-                    $('#success-msg').hide();
+                    setTimeout(function () {
+                        $('#success-msg').hide();
 
-                }, 4000);
+                    }, 4000);
 
-            },
-            error: function (xhr, status, error) {
-                if(status == '403') {
-                    window.location.assign("/login");
+                },
+                error: function (xhr, status, error) {
+                    if (status == '403') {
+                        window.location.assign("/login");
+                    }
+                    $('#failed_msg').text("پیغام خطا: " + xhr.responseJSON.message);
+                    $('#failed_msg').show();
+                    setTimeout(function () {
+                        $('#failed_msg').hide();
+
+                    }, 4000);
                 }
-                $('#failed_msg').text("پیغام خطا: " + xhr.responseJSON.message);
-                $('#failed_msg').show();
-                setTimeout(function () {
-                    $('#failed_msg').hide();
 
-                }, 4000);
-            }
-
-        });
+            });
+        }
 
     });
 

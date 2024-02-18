@@ -130,6 +130,24 @@ public class WgProxyServiceImpl implements WgProxyService {
     }
 
     @Override
+    public void deleteClient(String clientId) {
+        String sessionId = auth();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", sessionId);
+        HttpEntity httpEntity = new HttpEntity<>(headers);
+
+        StringBuilder path = new StringBuilder();
+        path.append(CLIENT_PATH);
+        path.append("/");
+        path.append(clientId);
+
+        String uri = generateURI(host, port, path.toString());
+        ResponseEntity<String> redirectHeaders =restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity,String.class);
+        String redirectUri = redirectHeaders.getHeaders().get("Location").get(0);
+        restTemplate.exchange(redirectUri, HttpMethod.DELETE, httpEntity, Object.class);
+    }
+
+    @Override
     public List<ClientModel> getAllActiveClients() {
         return Arrays.stream(getAllClients())
                 .filter(c -> c.isEnabled())

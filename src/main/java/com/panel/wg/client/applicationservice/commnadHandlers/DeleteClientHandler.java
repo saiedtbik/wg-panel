@@ -9,6 +9,8 @@ import com.panel.wg.common.domain.exceptions.BusinessRuleViolationException;
 import com.panel.wg.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -22,16 +24,18 @@ public class DeleteClientHandler implements Consumer<DeleteClientCommand> {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public void accept(DeleteClientCommand deleteClientCommand) {
         Client client = clientRepository.find(deleteClientCommand.clientId())
                 .orElseThrow(() -> new BusinessRuleViolationException(ClientError.CLIENT_NOT_EXIST));
-
-        Optional<ClientModel> wgClient = wgProxyService.getClient(client.getClientId());
-        if (wgClient.isPresent()) {
-            throw new BusinessRuleViolationException(ClientError.CLIENT_WG_EXIST);
-        }
+//
+//        Optional<ClientModel> wgClient = wgProxyService.getClient(client.getClientId());
+//        if (wgClient.isPresent()) {
+//            throw new BusinessRuleViolationException(ClientError.CLIENT_WG_EXIST);
+//        }
 
         userRepository.deleteById(client.getUser().getId());
         clientRepository.delete(client.getClientId());
+        wgProxyService.deleteClient(client.getClientId());
     }
 }

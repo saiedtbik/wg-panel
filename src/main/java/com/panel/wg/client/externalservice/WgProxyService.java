@@ -20,4 +20,6 @@ public interface WgProxyService {
     byte[] getConfigFile(String clientId);
 
     byte[] getQRCodeFile(String clientId);
+
+    void deleteClient(String clientId);
 }

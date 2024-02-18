@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
+//                            "/**",
                                     "/login",
                                     "/view-traffics",
                                     "/add-user",
@@ -71,6 +72,7 @@ public class SecurityConfiguration {
                             .requestMatchers(DELETE, "/api/v1/traffic/*").hasAnyAuthority(DELETE_TRAFFIC.name())
                             .requestMatchers(GET, "/api/v1/endpoint").hasAnyAuthority(VIEW_CONFIG.name())
                             .requestMatchers(GET, "/api/v1/client/*/configs").hasAnyAuthority(DOWNLOAD_CONFIG.name())
+
 
                     ;
 

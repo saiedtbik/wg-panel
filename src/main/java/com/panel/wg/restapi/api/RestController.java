@@ -186,6 +186,25 @@ public class RestController extends BaseController {
 
 
     @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("client/{clientId}/qr")
+    @ResponseBody
+    public ResponseEntity<byte[]> getQR(@PathVariable("clientId") String clientId) throws Exception {
+        byte[] configResponse = clientApplicationService.getConfigFile(clientId);
+
+        if (configJpaRepository.findById(1L).map(co -> co.getUrl()).isPresent()) {
+            configResponse = replaceLastLine(configResponse, configJpaRepository.findById(1L).map(co -> co.getUrl()).get());
+        }
+
+        byte[] qrCodeResponse = toByteArray(generateQRCodeImage(new String(configResponse, StandardCharsets.UTF_8)), "png");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        return new ResponseEntity<>(qrCodeResponse, headers, HttpStatus.OK);
+
+    }
+
+
+
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("client/{clientId}/configs")
     @ResponseBody
     public ResponseEntity<byte[]> getFiles(@PathVariable("clientId") String clientId) throws Exception {
@@ -203,7 +222,7 @@ public class RestController extends BaseController {
 
         byte[] qrCodeResponse = toByteArray(generateQRCodeImage(new String(configResponse, StandardCharsets.UTF_8)), "png");
 
-        byte[] zipFile = createZipFile(qrCodeResponse, configResponse);
+        byte[] zipFile = createZipFile(qrCodeResponse, configResponse, clientName);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -213,18 +232,18 @@ public class RestController extends BaseController {
     }
 
 
-    private byte[] createZipFile(byte[] svgContent, byte[] textContent) throws IOException {
+    private byte[] createZipFile(byte[] svgContent, byte[] textContent, String clientName) throws IOException {
         // Create a ByteArrayOutputStream to hold the zip file content
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ZipOutputStream zipOutputStream = new ZipOutputStream(baos)) {
 
             // Add SVG file to the zip file
-            zipOutputStream.putNextEntry(new ZipEntry("QRCode.svg"));
+            zipOutputStream.putNextEntry(new ZipEntry(clientName + ".svg"));
             zipOutputStream.write(svgContent);
             zipOutputStream.closeEntry();
 
             // Add modified text file to the zip file
-            zipOutputStream.putNextEntry(new ZipEntry("Config.conf"));
+            zipOutputStream.putNextEntry(new ZipEntry(clientName + ".conf"));
             zipOutputStream.write(textContent);
             zipOutputStream.closeEntry();
 

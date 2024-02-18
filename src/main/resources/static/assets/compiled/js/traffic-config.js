@@ -140,18 +140,18 @@ $(document).ready(function () {
             },
 
 
-            // {
-            //     title: "",
-            //     width: "10%",
-            //     'className': 'outBox-control',
-            //     "render": function (data, type, row, meta) {
-            //
-            //         return '  <button id="qrcode-btn" type="button" id="add-user-Btn" class="btn btn-icon qrcode tablebutton  btn-primary mr-0">\n' +
-            //             ' QR  \n' +
-            //             ' </button>'
-            //     }
-            //
-            // },
+            {
+                title: "",
+                width: "10%",
+                'className': 'outBox-control',
+                "render": function (data, type, row, meta) {
+
+                    return '  <button id="qrcode-btn" type="button" id="add-user-Btn" class="btn btn-icon qrcode tablebutton  btn-primary mr-0">\n' +
+                        ' QR  \n' +
+                        ' </button>'
+                }
+
+            },
 
             {
                 title: "",
@@ -160,12 +160,11 @@ $(document).ready(function () {
                 "render": function (data, type, row, meta) {
 
                     return '  <button id="traffic-btn" type="button" id="delete-user" class="btn btn-icon tablebutton delete-user btn-danger mr-0">\n' +
-                        ' خذف \n' +
+                        ' حذف \n' +
                         ' </button>'
                 }
 
             }
-
 
         ],
 
@@ -286,16 +285,32 @@ $(document).ready(function () {
         var clientId = row.data().clientId;
 
 
-        // Show modal
-        $("#inlineForm2").css("display", "block");
 
-        // Set hidden input variable value
-        // $("#username").val(username);
 
-        // Handle the close button functionality
-        // $(".close").click(function() {
-        //     $("#inlineForm").css("display", "none");
-        // });
+        $.ajax({
+            url: '/api/v1/client/' + clientId + '/qr',
+            headers: {'Authorization': "Bearer " + localStorage.getItem("token")},
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // Treat the response as a binary blob
+            },
+            success: function (data) {
+                const url = window.URL.createObjectURL(data);
+
+
+                $("#image-div").attr("src", url);
+
+                // Display the modal
+                $("#inlineForm2").css("display", "block");
+
+
+            },
+            error: function (error) {
+                console.error('Error fetching the zip file:', error);
+            }
+
+        });
+
 
     });
 
@@ -398,6 +413,10 @@ $(document).ready(function () {
     });
 
 
+    $('#close-qr').click(function () {
+        $("#inlineForm2").hide();
+
+    });
     /*------------------------------------------------ disable client and reset traffic ----------------------*/
 
     clientsTable.on('click', 'td.outBox-control button.deactive', function () {
@@ -449,7 +468,7 @@ $(document).ready(function () {
         var row = clientsTable.row(tr);
         var clientId = row.data().clientId;
 
-        if (confirm('آیااز حذف کاربر از روی سیستم مطمین هستید؟')) {
+        if (confirm('آیااز حذف کاربر روی سیستم مطمین هستید؟')) {
             $.ajax({
                 url: '/api/v1/user/' + clientId,
                 type: 'DELETE',

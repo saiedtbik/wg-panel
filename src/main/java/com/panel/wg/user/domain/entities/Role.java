@@ -29,7 +29,8 @@ public enum Role {
                             DELETE_CLIENT,
                             DELETE_TRAFFIC,
                             VIEW_CONFIG,
-                            DOWNLOAD_CONFIG
+                            DOWNLOAD_CONFIG,
+                            QR
 
                     )),
     CLIENT_USER(

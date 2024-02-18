@@ -31,8 +31,8 @@ public enum Authority {
     DELETE_CLIENT("/api/v1/user/*"),
     DELETE_TRAFFIC("/api/v1/traffic/*"),
     VIEW_CONFIG("/api/v1/endpoint"),
-    DOWNLOAD_CONFIG("/api/v1/client/*/configs")
-
+    DOWNLOAD_CONFIG("/api/v1/client/*/configs"),
+    QR("/api/v1/client/*/qr")
 
     ;
     @Getter

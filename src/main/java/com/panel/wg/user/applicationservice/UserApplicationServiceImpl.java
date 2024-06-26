@@ -65,6 +65,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 .createOn(LocalDateTime.now())
                 .mobileNum(command.mobileNumber())
                 .email(command.email())
+                .telegramId(command.telegramId())
                 .enabled(true)
                 .build();
 

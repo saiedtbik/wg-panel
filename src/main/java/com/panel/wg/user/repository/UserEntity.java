@@ -25,5 +25,6 @@ public class UserEntity {
     private String email;
     private LocalDateTime createOn;
     private boolean enabled;
+    private String telegramId;
 
 }

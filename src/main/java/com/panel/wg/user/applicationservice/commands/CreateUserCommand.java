@@ -27,5 +27,8 @@ public record CreateUserCommand(
         String repassword,
 
         String email,
-        String mobileNumber) {
+        String mobileNumber,
+
+        String telegramId
+        ) {
 }

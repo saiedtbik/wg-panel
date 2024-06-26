@@ -69,6 +69,7 @@ $(document).ready(function () {
     // var repassword = $('#repassword').val();
     var email = $('#email').val();
     var mobileNumber = $('#mobileNumber').val();
+    var telegramId = $('#telegramId').val();
 
     // Create data object to be sent in POST request
     var postData = {
@@ -79,6 +80,7 @@ $(document).ready(function () {
         // repassword: repassword,
         email: email,
         mobileNumber: mobileNumber,
+        telegramId:telegramId,
     };
 
     // AJAX POST request

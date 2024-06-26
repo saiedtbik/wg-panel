@@ -42,6 +42,7 @@ public class UserDataMapper {
         entity.setCreateOn(user.getCreateOn());
         entity.setEmail(user.getEmail());
         entity.setMobileNum(user.getMobileNum());
+        entity.setTelegramId(user.getTelegramId());
         return entity;
     }
 

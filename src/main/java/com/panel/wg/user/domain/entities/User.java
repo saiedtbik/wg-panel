@@ -24,6 +24,7 @@ public class User {
     private String email;
     private LocalDateTime createOn;
     private boolean enabled;
+    private String telegramId;
 
     public User(Long id) {
         this.id = id;
